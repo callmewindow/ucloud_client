@@ -1,6 +1,6 @@
 <template>
   <div id="CL">
-    <Navigator active-func="course" />
+    <Navigator active-func="robot" />
     <el-row :gutter="20" style="margin-left: 15%; margin-right: 15%">
       <el-col :span="16" style="margin-top: 80px;">
         <el-input placeholder="请输入内容" v-model="searchInput" class="input-with-select">

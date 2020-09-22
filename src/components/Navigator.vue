@@ -7,9 +7,9 @@
       <el-menu-item
         v-if="login != 'yes'"
         class="nav-text"
-        @click="FT.toPath('/courseList')"
-        index="course"
-      >课程</el-menu-item>
+        @click="FT.toPath('/robotList')"
+        index="robot"
+      >机器人</el-menu-item>
       <el-menu-item v-if="login != 'yes'" class="nav-text" @click="FT.building" index="college">学校</el-menu-item>
       <el-menu-item v-if="login != 'yes'" class="nav-text" @click="FT.building" index="forum">圈子</el-menu-item>
 
