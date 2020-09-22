@@ -2,132 +2,135 @@
   <div id="CL">
     <Navigator active-func="robot" />
     <el-row :gutter="20" style="margin-left: 15%; margin-right: 15%">
-      <el-col :span="16" style="margin-top: 80px;">
-        <el-input placeholder="请输入内容" v-model="searchInput" class="input-with-select">
-          <el-select
-            v-model="select"
-            style="width: 90px;color:black;padding-left:10px"
-            slot="prepend"
-          >
-            <el-option label="课 程" value="课程"></el-option>
-            <el-option label="教 师" value="教师"></el-option>
-          </el-select>
-          <el-button slot="append" style="color:#409eff" icon="el-icon-search" @click="searchAll"></el-button>
-        </el-input>
-      </el-col>
-      <el-col v-if="$store.state.teacherID === 2" :span="3" style="margin-top: 80px;float:right">
+      <el-col :span="3" style="margin-top: 90px;float:left">
         <el-button type="primary" style="float: right" @click="showAddCourse = true">
-          创建课程
+          创建机器人
           <i class="el-icon-arrow-right"></i>
         </el-button>
       </el-col>
     </el-row>
     <!--    全部课程列表-->
-    <el-row
-      :gutter="20"
-      style="margin-left: 15%; margin-right: 15%; padding-bottom:50px"
-      v-if="!display_search_result"
-    >
+    <el-row :gutter="20" style="margin-left: 15%; margin-right: 15%; padding-bottom:50px">
       <el-col
-        :span="6"
-        v-for="(course,index) in course_list"
-        :key="index"
-        style="margin-top: 20px;"
+          :span="8"
+          v-for="(bot,index) in bot_list"
+          :key="index"
+          style="margin-top: 20px;"
       >
         <el-card>
-          <img src="@/assets/course-cover.png" style="width: 100%" />
-          <el-row style="margin-top: 5px">
-            <el-link
-              type="primary"
-              :underline="false"
-              style="font-size: 20px;height: 20px"
-              @click="frontTool.toPath('/course/'+course.id)"
-            >{{ course.course_name|cut_8 }}</el-link>
-          </el-row>
-          <el-row style="margin-top: 5px">开课：{{ course.start_time|cut }} 至 {{ course.end_time|cut }}</el-row>
-          <el-row>
-            <div style="float: left">教师：{{ course.teacher ? course.teacher.realname:'匿名'}}</div>
-            <div style="float: right">学生人数：{{ course.student_number }}</div>
+          <el-row style="margin: 0">
+            <el-col :span="8">
+              <img src="@/assets/ucloud-logo-mini.png" style="float: left"/>
+            </el-col>
+            <el-col :span="16">
+              <el-row style="margin-top: 5px; margin-bottom: 15px">
+                <el-link
+                    type="primary"
+                    :underline="false"
+                    style="font-size: 20px;"
+                    @click="frontTool.toPath('/bot/'+bot.botId)"
+                >{{ bot.botName }}
+                </el-link>
+              </el-row>
+              <el-row>
+                类型：{{ bot.botType }}
+              </el-row>
+              <el-row>
+                创建者：{{ bot.botOwner.userName }}
+              </el-row>
+            </el-col>
           </el-row>
         </el-card>
       </el-col>
     </el-row>
-    <!--    搜索结果列表-->
-    <el-row
-      :gutter="20"
-      style="margin-left: 15%; margin-right: 15%; padding-bottom:50px"
-      v-if="display_search_result"
-    >
-      <el-card v-if="search_list.length == 0">暂无有关课程</el-card>
-      <el-col
-        :span="6"
-        v-for="(course,index) in search_list"
-        :key="index"
-        style="margin-top: 20px;"
-      >
-        <el-card>
-          <img src="@/assets/ucloud-logo.png" style="width: 100%" />
-          <el-row style="margin-top: 5px">
-            <el-link
-              type="primary"
-              :underline="false"
-              style="font-size: 20px;height: 20px"
-              @click="frontTool.toPath('/course/'+course.id)"
-            >{{ course.course_name|cut_8 }}</el-link>
-          </el-row>
-          <el-row style="margin-top: 5px">
-            <div>开课：{{ course.start_time|cut }} 至 {{ course.end_time|cut }}</div>
-          </el-row>
-          <el-row>
-            <div style="float: left">教师：{{ course.teacher_name }}</div>
-          </el-row>
-        </el-card>
-      </el-col>
-    </el-row>
-    <el-dialog :visible.sync="showAddCourse" width="50%">
-      <AddCourse />
+    <el-dialog :visible.sync="showAddCourse" width="30%">
+      <div id="sendPA">
+        <div class="sendItem">
+          <div class="itemTitle"><span style="color:red">*</span>机器人名称</div>
+          <el-input v-model="new_bot.botName" placeholder="请输入名称" maxlength="30" show-word-limit></el-input>
+        </div>
+        <div class="sendItem">
+          <div class="itemTitle"><span style="color:red">*</span>QQ</div>
+          <el-input v-model="new_bot.botQQ" placeholder="请输入QQ"></el-input>
+        </div>
+        <div class="sendItem">
+          <div class="itemTitle"><span style="color:red">*</span>密码</div>
+          <el-input v-model="new_bot.botPassword" placeholder="请输入密码"></el-input>
+        </div>
+        <div class="sendItem">
+          <div class="itemTitle"><span style="color:red">*</span>机器人简介</div>
+          <el-input
+              type="textarea"
+              :rows="5"
+              placeholder="请输入简介"
+              v-model="new_bot.botIntro"
+              resize="none"
+              maxlength="500"
+              show-word-limit
+          ></el-input>
+        </div>
+        <div class="sendItem" style="width:50%">
+          <div class="itemTitle"><span style="color:red">*</span>机器人类型</div>
+          <el-select v-model="new_bot.botType" placeholder="请选择类型">
+            <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+            ></el-option>
+          </el-select>
+        </div>
+        <el-button id="sendBtn" type="primary" size="small" @click="create_bot">创建</el-button>
+      </div>
     </el-dialog>
-    <Footer />
   </div>
 </template>
 
 <script>
-import * as courseAPI from "@/APIs/course.js";
 import Navigator from "@/components/Navigator";
-import AddCourse from "@/components/AddCourse";
-import Footer from "@/components/Footer";
 import * as frontTool from "@/tools/frontTool";
+import * as botAPI from "@/APIs/bot";
 
 export default {
   name: "CourseList",
   components: {
     Navigator,
-    Footer,
-    AddCourse,
   },
   data() {
     return {
       frontTool,
-      select: "课程",
-      searchInput: "",
       showAddCourse: false,
-      course_list: [],
-      search_keyword: "",
-      search_list: [],
-      display_search_result: false,
+      bot_list: [
+        {
+          botId: 1,
+          botName: "botname",
+          botType: "bottype",
+          botOwner: {
+            userName: "aaaaaaaaaa"
+          }
+        },
+      ],
+      new_bot: {
+        botName: "",
+        botType: 1,
+        botIntro: "",
+        botQQ: "",
+        botPassword: "",
+      },
+      options: [
+        {
+          value: 1,
+          label: "私聊机器人",
+        },
+        {
+          value: 2,
+          label: "群聊机器人",
+        },
+      ],
     };
   },
   created() {
-    //填充旧数据
-    // let oldUI = JSON.parse(localStorage.getItem("userinfo"));
-    // if (oldUI) {
-    //   this.$store.state.email = oldUI.email;
-    //   this.$store.state.nickname = oldUI.nickname;
-    //   this.$store.state.permission = oldUI.permission;
-    //   this.$store.state.teacherID = oldUI.teacherID;
-    //   this.$store.state.userId = oldUI.userId;
-    // }
-    //this.get_course_list();
+    //this.get_all_bot();
   },
   filters: {
     cut(str) {
@@ -140,34 +143,32 @@ export default {
     },
   },
   methods: {
-    async searchAll() {
-      if (this.select === "课程") {
-        this.search_keyword = this.searchInput;
-        this.display_search_result = false;
-        this.search_course();
-      }
-      if (this.select === "教师") {
-        this.$message("教师检索功能开发中，敬请期待！");
-      }
-    },
-    async get_course_list() {
+    async get_all_bot() {
       try {
-        // const list = await courseAPI.courseQuery();
-        // window.console.log(list);
-        this.course_list = [];
-        this.course_list.reverse();
+        const list = await botAPI.getAllBot();
+        window.console.log(list.data.data);
+        //this.bot_list = list.data.data;
       } catch (e) {
         this.$message.error("请求超时");
       }
     },
-    async search_course() {
+    async create_bot() {
+      if (this.new_bot.botName === "" || this.new_bot.botIntro === "" || this.new_bot.botQQ === "" || this.new_bot.botPassword === "") {
+        this.$message.error("必填字段未填写");
+        return;
+      }
       try {
-        const list = await courseAPI.searchCourse(this.search_keyword);
-        this.search_list = list.data;
-        this.display_search_result = true;
-        console.log(list);
-      } catch (e) {
-        this.$message.error("请求超时");
+        const r = await botAPI.createBot(
+            this.new_bot.botName,
+            this.new_bot.botIntro,
+            this.new_bot.botQQ,
+            this.new_bot.botPassword,
+            this.new_bot.botType,
+            this.$store.state.userId
+        );
+        await this.$router.push({path: "/robot/" + r.data.data.botId})
+      } catch (error) {
+        console.log(error);
       }
     },
   },
@@ -177,5 +178,20 @@ export default {
 <style scoped>
 #CL {
   min-height: calc(100vh + 10px);
+}
+
+.sendItem {
+  width: 100%;
+  margin: 20px 0;
+}
+
+.sendItem:nth-child(1) {
+  margin-top: 0;
+}
+
+.itemTitle {
+  font-size: 14px;
+  font-weight: bold;
+  margin: 5px 0;
 }
 </style>
