@@ -66,7 +66,7 @@
         style="margin-top: 20px;"
       >
         <el-card>
-          <img src="@/assets/course-cover.png" style="width: 100%" />
+          <img src="@/assets/ucloud-logo.png" style="width: 100%" />
           <el-row style="margin-top: 5px">
             <el-link
               type="primary"
