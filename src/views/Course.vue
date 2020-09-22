@@ -356,26 +356,26 @@ export default {
   // 加载
   async created() {
     //填充旧数据
-    let oldUI = JSON.parse(localStorage.getItem("userinfo"));
-    if (oldUI) {
-      this.$store.state.email = oldUI.email;
-      this.$store.state.nickname = oldUI.nickname;
-      this.$store.state.permission = oldUI.permission;
-      this.$store.state.teacherID = oldUI.teacherID;
-      this.$store.state.userId = oldUI.userId;
-    }
-    if (this.$store.state.userId === -1) {
-      this.$message.error("请登录后查看课程详情");
-      FT.toPath("/Home");
-    }
+    // let oldUI = JSON.parse(localStorage.getItem("userinfo"));
+    // if (oldUI) {
+    //   this.$store.state.email = oldUI.email;
+    //   this.$store.state.nickname = oldUI.nickname;
+    //   this.$store.state.permission = oldUI.permission;
+    //   this.$store.state.teacherID = oldUI.teacherID;
+    //   this.$store.state.userId = oldUI.userId;
+    // }
+    // if (this.$store.state.userId === -1) {
+    //   this.$message.error("请登录后查看课程详情");
+    //   FT.toPath("/Home");
+    // }
     this.userId = this.$store.state.userId;
     console.log("userID：" + this.userId);
     // 从地址栏获得courseId
     this.courseId = this.$route.params.courseId;
     console.log("courseId：" + this.courseId);
     // 根据courseId获取相应的信息
-    await this.getCourseBasicInfo();
-    await this.getCourseVideoUrlArray();
+    // await this.getCourseBasicInfo();
+    // await this.getCourseVideoUrlArray();
     // 切换tab位置，默认为第一个
     this.tabPos = this.$route.params.coursePos;
     if (this.tabNames.indexOf(this.tabPos) == -1) {

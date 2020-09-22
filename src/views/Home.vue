@@ -163,29 +163,29 @@ export default {
   },
   async created() {
     //填充旧数据
-    let oldUI = JSON.parse(localStorage.getItem("userinfo"));
-    if (oldUI) {
-      this.$store.state.email = oldUI.email;
-      this.$store.state.nickname = oldUI.nickname;
-      this.$store.state.permission = oldUI.permission;
-      this.$store.state.teacherID = oldUI.teacherID;
-      this.$store.state.userId = oldUI.userId;
-    }
+    // let oldUI = JSON.parse(localStorage.getItem("userinfo"));
+    // if (oldUI) {
+    //   this.$store.state.email = oldUI.email;
+    //   this.$store.state.nickname = oldUI.nickname;
+    //   this.$store.state.permission = oldUI.permission;
+    //   this.$store.state.teacherID = oldUI.teacherID;
+    //   this.$store.state.userId = oldUI.userId;
+    // }
     this.username = this.$store.state.nickname;
-    let temp = await CourseAPI.getUserCourse(this.$store.state.userId);
-    console.log(temp);
-    if (temp.data.message == "该用户未参加任何课程。") {
-      this.haveClass = false;
-    } else {
-      this.haveClass = true;
-      this.allSelect = temp.data.courses;
-      this.allSelect.reverse();
-      for (let index = 0; index < this.allSelect.length && index < 3; index++) {
-        this.selectClasses.push(this.allSelect[index]);
-      }
-    }
-    console.log(this.selectClasses);
-    await this.getHotCourse();
+    // let temp = await CourseAPI.getUserCourse(this.$store.state.userId);
+    // console.log(temp);
+    // if (temp.data.message == "该用户未参加任何课程。") {
+    //   this.haveClass = false;
+    // } else {
+    //   this.haveClass = true;
+    //   this.allSelect = temp.data.courses;
+    //   this.allSelect.reverse();
+    //   for (let index = 0; index < this.allSelect.length && index < 3; index++) {
+    //     this.selectClasses.push(this.allSelect[index]);
+    //   }
+    // }
+    // console.log(this.selectClasses);
+    // await this.getHotCourse();
   },
   methods: {
     toClass(courseId) {

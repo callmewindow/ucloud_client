@@ -119,15 +119,15 @@ export default {
   },
   created() {
     //填充旧数据
-    let oldUI = JSON.parse(localStorage.getItem("userinfo"));
-    if (oldUI) {
-      this.$store.state.email = oldUI.email;
-      this.$store.state.nickname = oldUI.nickname;
-      this.$store.state.permission = oldUI.permission;
-      this.$store.state.teacherID = oldUI.teacherID;
-      this.$store.state.userId = oldUI.userId;
-    }
-    this.get_course_list();
+    // let oldUI = JSON.parse(localStorage.getItem("userinfo"));
+    // if (oldUI) {
+    //   this.$store.state.email = oldUI.email;
+    //   this.$store.state.nickname = oldUI.nickname;
+    //   this.$store.state.permission = oldUI.permission;
+    //   this.$store.state.teacherID = oldUI.teacherID;
+    //   this.$store.state.userId = oldUI.userId;
+    // }
+    //this.get_course_list();
   },
   filters: {
     cut(str) {
@@ -152,9 +152,9 @@ export default {
     },
     async get_course_list() {
       try {
-        const list = await courseAPI.courseQuery();
-        window.console.log(list);
-        this.course_list = list.data.courses;
+        // const list = await courseAPI.courseQuery();
+        // window.console.log(list);
+        this.course_list = [];
         this.course_list.reverse();
       } catch (e) {
         this.$message.error("请求超时");
