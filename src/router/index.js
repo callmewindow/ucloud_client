@@ -10,17 +10,12 @@ const routes = [
     redirect: '/home',
   },
   {
-    path: '/pm',
-    name: 'PrivateMessage',
-    component: () => import('@/components/PrivateMessages.vue'),
-  },
-  {
     path: '/home',
     name: 'Home',
     component: () => import('@/views/Home.vue'),
   },
   {
-    path: '/courselist',
+    path: '/robotlist',
     name: 'CourseList',
     component: () => import('@/views/CourseList.vue'),
   },
@@ -30,16 +25,13 @@ const routes = [
     component: () => import('@/views/UserDetail.vue'),
   },
   {
-    path: '/course/:courseId',
+    path: '/robot/:robotId',
     redirect: '/course/:courseId/intro'
   },
   {
-    path: '/course/:courseId/:coursePos/',
+    path: '/robot/:robotId/:robotPos/',
     name: 'Course',
     component: () => import('@/views/Course.vue'),
-    children: [
-      {path: 'post/:postId'},
-    ]
   },
   {
     path: '/Login',

@@ -1,6 +1,6 @@
 <template>
   <div id="CL">
-    <Navigator active-func="course"/>
+    <Navigator active-func="robot" />
     <el-row :gutter="20" style="margin-left: 15%; margin-right: 15%">
       <el-col :span="3" style="margin-top: 90px;float:left">
         <el-button type="primary" style="float: right" @click="showAddCourse = true">
