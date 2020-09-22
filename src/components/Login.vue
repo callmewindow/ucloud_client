@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import * as userAPI from "../APIs/user";
+import * as userAPI from "@/APIs/user";
 
 export default {
   name: "Login",
@@ -105,7 +105,7 @@ export default {
           this.login.password
         );
         console.log(userInfo);
-        return ;
+        return;
         this.$store.state.userId = userInfo.data.id;
         this.$store.state.teacherID = userInfo.data.teacher_identity;
         this.$store.state.email = userInfo.data.email;
@@ -130,7 +130,6 @@ export default {
             this.pos = "login";
             this.login.username = this.register.username;
             this.login.password = this.register.password;
-            
           } catch (e) {
             this.$message.error("哦豁，" + e.toString());
           }

@@ -1,7 +1,7 @@
 <template>
-  <el-card>
+  <div>
     <Navigator login="yes" />
-  </el-card>
+  </div>
 </template>
 
 <script>

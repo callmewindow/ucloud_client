@@ -5,7 +5,7 @@
       <div id="top">
         <el-row type="flex" class="row-bg" justify="center">
           <el-col :span="12">
-            <el-carousel id="carouselImg" height="366px" class="con-block" :interval="3000">
+            <el-carousel id="carouselImg" height="222px" class="con-block" :interval="3000">
               <el-carousel-item v-for="item in 4" :key="item">
                 <el-image style="width:100%;height:100%" :src="centerLogo" fit="contain" />
               </el-carousel-item>
@@ -26,22 +26,23 @@
                 <!-- <Username v-if="$store.state.teacherID != 2" :name="username" text="教师" type="1" />
                 <Username v-if="$store.state.teacherID == 2" :name="username" text="" type="1" />-->
               </div>
-              <div id="tip">最近学习</div>
-              <div
-                v-if="!haveClass"
-                class="classes"
-                style="padding-bottom:10px;cursor:default"
-              >暂未加入课程</div>
-              <div v-if="haveClass">
+              <div id="tip">我的BOT</div>
+              <div v-if="!haveBot" class="bots" style="padding-bottom:10px;cursor:default">暂未创建机器人</div>
+              <div v-if="haveBot">
                 <div
-                  class="classes"
-                  v-for="(item,index) in selectClasses"
+                  class="bots"
+                  v-for="(bot,index) in my_bot_list"
                   :key="index"
-                  @click="toClass(item.course_id)"
-                >{{item.course_name +"-"+ item.profession}}</div>
+                  @click="toBot(bot.botId)"
+                >
+                  <span>{{bot.botName +"-" }}</span>
+                  <span v-if="bot.botType == 1">私聊BOT</span>
+                  <span v-if="bot.botType == 2">群聊BOT</span>
+                  <span v-if="bot.botType == 3">代码检查BOT</span>
+                </div>
                 <div
-                  v-if="this.allSelect.length>3"
-                  class="classes"
+                  v-if="this.my_bot_list_all.length>3"
+                  class="bots"
                   style="font-size:14px;color:gray;"
                   @click="FT.toPath('/user/'+$store.state.userId)"
                 >更多......</div>
@@ -54,7 +55,7 @@
       <el-row type="flex" class="row-bg" justify="center">
         <el-col :span="18" class="divideBar">
           <el-image class="barImg" :src="simpleLogo" fit="contain" />
-          <div class="barCon">是烽火也是灯塔，指引你前进的方向</div>
+          <div class="barCon">选择你的BOT，开启新的生活</div>
         </el-col>
       </el-row>
 
@@ -63,23 +64,29 @@
           <el-col :span="18">
             <el-card>
               <div slot="header">
-                <span>热门课程</span>
-                <el-button
-                  style="float: right; padding: 3px 0"
-                  type="text"
-                  @click="getHotCourse('f5')"
-                >刷新</el-button>
+                <span>推荐BOT</span>
+                <el-button style="float: right; padding: 3px 0" type="text" @click="FT.building">刷新</el-button>
               </div>
-              <el-row class="hotCourseCon" justify="space-around">
-                <el-col class="hotCourse" :span="5" v-for="(item,index) in hotCourse" :key="index">
-                  <div class="className" @click="toClass(item.id)">{{item.course_name | filterName}}</div>
-                  <div class="classType">{{item.profession}}</div>
-                  <div
-                    class="classFrom"
-                  >开始：{{item.start_time.substring(5,10)}} 结束：{{item.end_time.substring(5,10)}}</div>
-                  <div class="studentNum">选课{{item.student_number}}人</div>
-                  <!-- <el-divider></el-divider> -->
-                  <!-- <div class="classIntro">{{ classIntro | filterIntro }}</div> -->
+              <el-row class="hotBotCon" justify="space-around">
+                <el-col :span="6" v-for="(bot,index) in bot_list" :key="index">
+                  <div class="botCard">
+                    <el-row style="margin: 0">
+                      <el-col>
+                        <el-row style="margin-top: 5px; margin-bottom: 7px">
+                          <el-link
+                            type="primary"
+                            :underline="false"
+                            style="font-size: 20px;"
+                            @click="FT.toPath('/bot/'+bot.botId)"
+                          >{{ bot.botName }}</el-link>
+                        </el-row>
+                        <el-row v-if="bot.botType == 1">类型：私聊BOT</el-row>
+                        <el-row v-if="bot.botType == 2">类型：群聊BOT</el-row>
+                        <el-row v-if="bot.botType == 3">类型：代码检查BOT</el-row>
+                        <el-row style="margin-top:3px">创建者：{{ bot.botOwner.userName }}</el-row>
+                      </el-col>
+                    </el-row>
+                  </div>
                 </el-col>
               </el-row>
             </el-card>
@@ -92,12 +99,12 @@
           <el-col :span="18">
             <el-card>
               <div slot="header">
-                <span>热门领域</span>
+                <span>热门类型</span>
                 <el-button style="float: right; padding: 3px 0" type="text" @click="FT.building">刷新</el-button>
               </div>
-              <el-row class="hotCourseCon" justify="space-around">
+              <el-row class="hotBotCon" justify="space-around">
                 <el-col :span="2" v-for="o in 10" :key="o">
-                  <el-tag class="hotTag" @click="FT.building" effect="plain" type="primary">软件工程</el-tag>
+                  <el-tag class="hotTag" @click="FT.building" effect="plain" type="primary">群聊BOT</el-tag>
                 </el-col>
               </el-row>
             </el-card>
@@ -106,60 +113,89 @@
       </div>
     </div>
 
-    <Footer position="left" />
+    <Footer position="center" />
   </div>
 </template>
 
 <script>
 import * as FT from "@/tools/frontTool";
-import * as AT from "@/tools/apiTool";
 import * as UserAPI from "@/APIs/user.js";
-import * as CourseAPI from "@/APIs/course.js";
+import * as BotAPI from "@/APIs/bot.js";
 import Navigator from "@/components/Navigator";
 import Footer from "@/components/Footer";
-// import Username from "@/components/Username";
 export default {
   name: "Home",
   components: {
     Navigator,
     Footer,
-    // Username,
   },
   data() {
     return {
       FT,
-      haveClass: false,
-      centerLogo: require("@/assets/logo-horizon-complex.png"),
-      simpleLogo: require("@/assets/logo-horizon-simple.png"),
+      haveBot: false,
+      centerLogo: require("@/assets/ucloud-horizon-complex.png"),
+      simpleLogo: require("@/assets/ucloud-horizon-simple.png"),
       username: "加载中",
-      // classes: [
-      //   "软件系统分析-软件工程",
-      //   "软件过程质量-软件工程",
-      //   "软件测试-软件工程",
-      // ],
-      selectClasses: [],
-      allSelect: [],
-      // classes: [
-      //   "临时路由引导：",
-      //   "/uploadvideo上传视频，/sendPost发布帖子",
-      //   "/course课程信息，/user个人信息（还没更新）",
-      //   "/addcourse新增课程，/postdetail帖子",
-      // ],
-      // classIntro:
-      //   "《软件工程实践》是软件工程本科专业的一门专业必修课。它是集软件、硬件、程序语言开发、数据库设计、软件过程管理和交互设计为一体的重要实践课程。",
-      hotCourse: [],
+      hotBot: [],
+      bot_list: [
+        {
+          botId: 1,
+          botName: "botname",
+          botType: 1,
+          botOwner: {
+            userName: "aaaaaaaaaa",
+          },
+        },
+        {
+          botId: 1,
+          botName: "botname",
+          botType: 2,
+          botOwner: {
+            userName: "aaaaaaaaaa",
+          },
+        },
+        {
+          botId: 1,
+          botName: "botname",
+          botType: 1,
+          botOwner: {
+            userName: "aaaaaaaaaa",
+          },
+        },
+        {
+          botId: 1,
+          botName: "botname",
+          botType: 1,
+          botOwner: {
+            userName: "aaaaaaaaaa",
+          },
+        },
+      ],
+      my_bot_list: [
+        {
+          botId: 1,
+          botName: "botname",
+          botType: 1,
+          botStatus: false,
+          botQQ: 1111111111,
+        },
+        {
+          botId: 1,
+          botName: "botname",
+          botType: 2,
+          botStatus: true,
+          botQQ: 1111111111,
+        },
+        {
+          botId: 1,
+          botName: "botname",
+          botType: 2,
+          botStatus: false,
+          botQQ: 1111111111,
+        },
+      ],
+      my_bot_list_all: [],
     };
-  },
-  filters: {
-    filterIntro(value) {
-      return value.substring(0, 40) + "...";
-    },
-    filterName(value) {
-      if (value.length > 6) {
-        return value.substring(0, 6) + "...";
-      }
-      return value;
-    },
   },
   async created() {
     //填充旧数据
@@ -175,30 +211,30 @@ export default {
     // let temp = await CourseAPI.getUserCourse(this.$store.state.userId);
     // console.log(temp);
     // if (temp.data.message == "该用户未参加任何课程。") {
-    //   this.haveClass = false;
+    //   this.haveBot = false;
     // } else {
-    //   this.haveClass = true;
+    //   this.haveBot = true;
     //   this.allSelect = temp.data.courses;
     //   this.allSelect.reverse();
     //   for (let index = 0; index < this.allSelect.length && index < 3; index++) {
-    //     this.selectClasses.push(this.allSelect[index]);
+    //     this.selectbots.push(this.allSelect[index]);
     //   }
     // }
-    // console.log(this.selectClasses);
+    // console.log(this.selectbots);
     // await this.getHotCourse();
   },
   methods: {
-    toClass(courseId) {
-      FT.toPath("/course/" + courseId);
+    toBot(botId) {
+      FT.toPath("/bot/" + botId);
     },
-    async getHotCourse(type) {
-      let temp = await CourseAPI.getHotCourses();
-      this.hotCourse = temp.data.courses;
-      for (let i = this.hotCourse.length; i > 8; i--) {
-        this.hotCourse.pop();
+    async getHotbot(type) {
+      let temp = await botAPI.getHotbots();
+      this.hotBot = temp.data.bots;
+      for (let i = this.hotBot.length; i > 8; i--) {
+        this.hotbot.pop();
       }
       if (type == "f5") {
-        this.$message.success("热门课程已刷新");
+        this.$message.success("推荐BOT已刷新");
       }
     },
   },
@@ -208,11 +244,10 @@ export default {
 <style scoped>
 #all {
   width: 100%;
-  height: auto;
-  padding-bottom: 70px;
+  min-height: 100vh;
 }
 #main {
-  padding-top: 75px;
+  padding-top: 70px;
   width: 100%;
   clear: both;
 }
@@ -237,9 +272,9 @@ export default {
   font-size: 13px;
   color: #797b80;
 }
-.classes {
+.bots {
   cursor: pointer;
-  margin-top: 5px;
+  margin-top: 7px;
   margin-left: 15px;
   font-size: 16px;
 }
@@ -247,16 +282,16 @@ export default {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 }
 .el-carousel__item:nth-child(2n) {
-  background-color: rgba(255, 136, 136, 0.363);
+  background-color: rgba(0, 81, 255, 0.541);
 }
 .el-carousel__item:nth-child(2n + 1) {
-  background-color: rgba(248, 190, 151, 0.521);
+  background-color: rgba(70, 172, 255, 0.5);
 }
 
 .divideBar {
   height: 60px;
   padding-top: 5px;
-  margin-top: 15px;
+  margin-top: 10px;
   background-color: white;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 }
@@ -271,65 +306,32 @@ export default {
   width: 460px;
   text-align: center;
   margin-left: calc(37vw - 380px);
-  letter-spacing: 5px;
+  letter-spacing: 3px;
   line-height: 50px;
   font-size: 20px;
   font-weight: bold;
 }
 
 #medium {
-  margin-top: 15px;
+  margin-top: 10px;
 }
-.hotCourseCon {
+.hotBotCon {
   height: auto;
 }
-.hotCourse {
+.botCard {
+  width: 80%;
+  margin-left: 10%;
+  padding-bottom: 10px;
   border-bottom: 1px solid rgb(128, 128, 128);
-  margin: 20px 0;
-  margin-left: 30px;
-  padding-left: 20px;
-  padding-bottom: 5px;
+  margin-bottom: 20px;
 }
-.className {
-  cursor: pointer;
-  font-size: 20px;
-  font-weight: bold;
-  height: 26px;
-  line-height: 26px;
-  color: #409eff;
-  float: left;
-}
-.classType {
-  font-size: 13px;
-  margin-top: 1px;
-  margin-left: 5px;
-  height: 26px;
-  float: left;
-  color: #797b80;
-}
-.classFrom {
-  clear: both;
+.botCard .el-row{
   font-size: 15px;
-  margin: 5px 0;
-  margin-top: 7px;
-  height: 20px;
-  line-height: 20px;
-}
-.studentNum {
-  margin-top: 2px;
-  font-size: 13px;
-  color: #797b80;
-}
-.classIntro {
-  font-size: 14px;
-}
-.el-divider {
-  margin: 10px;
 }
 .hotTag {
   cursor: pointer;
 }
 #bottom {
-  margin-top: 15px;
+  margin-top: 10px;
 }
 </style>

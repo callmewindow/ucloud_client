@@ -8,11 +8,11 @@
       <el-col style=" margin-top: 80px;">
         <el-card>
           <el-row>
-            <el-col :span="6" :offset="2" style="padding-top: 12px">用户名：{{ username }}</el-col>
-            <el-col :span="6" style="padding-top: 12px">BOT数：{{ bot_total }}</el-col>
-            <el-col :span="6" style="padding-top: 12px">运行中：{{ bot_run }}</el-col>
+            <el-col :span="6" :offset="2" style="padding-top: 5px">用户名：{{ username }}</el-col>
+            <el-col :span="6" style="padding-top: 5px">BOT数：{{ bot_total }}</el-col>
+            <el-col :span="6" style="padding-top: 5px">运行中：{{ bot_run }}</el-col>
             <el-col :span="4">
-              <el-button @click="quit_login">注销</el-button>
+              <el-button type="danger" size="small" @click="quit_login">注销</el-button>
             </el-col>
           </el-row>
         </el-card>

@@ -3,7 +3,7 @@
     <Navigator active-func="robot" />
     <el-row :gutter="20" style="margin-left: 15%; margin-right: 15%">
       <el-col :span="3" style="margin-top: 90px;float:left">
-        <el-button type="primary" style="float: right" @click="showAddCourse = true">
+        <el-button type="primary" style="float: right" @click="showAddBot = true">
           创建BOT
           <i class="el-icon-arrow-right"></i>
         </el-button>
@@ -43,7 +43,7 @@
         </el-card>
       </el-col>
     </el-row>
-    <el-dialog :visible.sync="showAddCourse" width="30%">
+    <el-dialog :visible.sync="showAddBot" width="30%">
       <div id="sendPA">
         <div class="sendItem">
           <div class="itemTitle"><span style="color:red">*</span>BOT名称</div>
@@ -92,15 +92,39 @@ import * as frontTool from "@/tools/frontTool";
 import * as botAPI from "@/APIs/bot";
 
 export default {
-  name: "CourseList",
+  name: "BotList",
   components: {
     Navigator,
   },
   data() {
     return {
       frontTool,
-      showAddCourse: false,
+      showAddBot: false,
       bot_list: [
+        {
+          botId: 1,
+          botName: "botname",
+          botType: "bottype",
+          botOwner: {
+            userName: "aaaaaaaaaa"
+          }
+        },
+        {
+          botId: 1,
+          botName: "botname",
+          botType: "bottype",
+          botOwner: {
+            userName: "aaaaaaaaaa"
+          }
+        },
+        {
+          botId: 1,
+          botName: "botname",
+          botType: "bottype",
+          botOwner: {
+            userName: "aaaaaaaaaa"
+          }
+        },
         {
           botId: 1,
           botName: "botname",
