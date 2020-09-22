@@ -130,7 +130,7 @@ export default {
     };
   },
   created() {
-    //this.get_all_bot();
+    this.get_all_bot();
   },
   filters: {
     cut(str) {
@@ -145,8 +145,8 @@ export default {
   methods: {
     async get_all_bot() {
       try {
-        const list = await botAPI.getAllBot();
-        window.console.log(list.data.data);
+        //const list = await botAPI.getAllBot();
+        //window.console.log(list.data.data);
         //this.bot_list = list.data.data;
       } catch (e) {
         this.$message.error("请求超时");

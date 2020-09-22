@@ -67,7 +67,7 @@
 <script>
 import Navigator from "@/components/Navigator";
 import * as frontTool from "@/tools/frontTool";
-import * as botAPI from "@/APIs/bot";
+import * as userAPI from "@/APIs/user";
 
 export default {
   name: "UserInfo",
@@ -113,11 +113,7 @@ export default {
     };
   },
   created() {
-    //this.get_all_bot();
-    this.bot_total = this.bot_list.length;
-    for (let i = 0; i < this.bot_total; i++)
-      if (this.bot_list[i].botStatus)
-        this.bot_run++;
+    this.get_user_info();
   },
   filters: {
     cut(str) {
@@ -130,11 +126,16 @@ export default {
     },
   },
   methods: {
-    async get_all_bot() {
+    async get_user_info() {
       try {
-        const list = await botAPI.getAllBot();
-        window.console.log(list.data.data);
-        //this.bot_list = list.data.data;
+        //const res = await userAPI.getUserInfo(this.$store.state.userId)
+        //window.console.log(list.data.data);
+        //this.bot_list = list.data.data.bots;
+        //this.username = this.$store.state.username;
+        this.bot_total = this.bot_list.length;
+        for (let i = 0; i < this.bot_total; i++)
+          if (this.bot_list[i].botStatus)
+            this.bot_run++;
       } catch (e) {
         this.$message.error("请求超时");
       }
