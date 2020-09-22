@@ -23,7 +23,7 @@
       </el-menu-item>
     </el-menu>
 
-    <el-card header="加入烽火平台" shadow="never" id="loginWin" v-if="loginShow === 'yes'">
+    <el-card header="加入大云平台" shadow="never" id="loginWin" v-if="loginShow === 'yes'">
       <Login />
     </el-card>
   </div>
