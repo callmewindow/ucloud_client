@@ -9,7 +9,7 @@
         </el-button>
       </el-col>
     </el-row>
-    <!--    全部课程列表-->
+
     <el-row :gutter="20" style="margin-left: 15%; margin-right: 15%; padding-bottom:50px">
       <el-col
           :span="8"
@@ -32,8 +32,14 @@
                 >{{ bot.botName }}
                 </el-link>
               </el-row>
-              <el-row>
-                类型：{{ bot.botType }}
+              <el-row v-if="bot.botType === 1">
+                类型：私聊BOT
+              </el-row>
+              <el-row v-if="bot.botType === 2">
+                类型：群聊BOT
+              </el-row>
+              <el-row v-if="bot.botType === 3">
+                类型：代码检查BOT
               </el-row>
               <el-row>
                 创建者：{{ bot.botOwner.userName }}

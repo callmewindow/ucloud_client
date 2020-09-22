@@ -45,8 +45,14 @@
                     >{{ bot.botName }}
                     </el-link>
                   </el-row>
-                  <el-row>
-                    类型：{{ bot.botType }}
+                  <el-row v-if="bot.botType === 1">
+                    类型：私聊BOT
+                  </el-row>
+                  <el-row v-if="bot.botType === 2">
+                    类型：群聊BOT
+                  </el-row>
+                  <el-row v-if="bot.botType === 3">
+                    类型：代码检查BOT
                   </el-row>
                   <el-row>
                     QQ：{{ bot.botQQ }}
@@ -84,7 +90,7 @@ export default {
         {
           botId: 1,
           botName: "botname",
-          botType: "bottype",
+          botType: 1,
           botStatus: false,
           botQQ: 1111111111,
         },
