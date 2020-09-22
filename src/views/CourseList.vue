@@ -4,7 +4,7 @@
     <el-row :gutter="20" style="margin-left: 15%; margin-right: 15%">
       <el-col :span="3" style="margin-top: 90px;float:left">
         <el-button type="primary" style="float: right" @click="showAddCourse = true">
-          创建机器人
+          创建BOT
           <i class="el-icon-arrow-right"></i>
         </el-button>
       </el-col>
@@ -46,7 +46,7 @@
     <el-dialog :visible.sync="showAddCourse" width="30%">
       <div id="sendPA">
         <div class="sendItem">
-          <div class="itemTitle"><span style="color:red">*</span>机器人名称</div>
+          <div class="itemTitle"><span style="color:red">*</span>BOT名称</div>
           <el-input v-model="new_bot.botName" placeholder="请输入名称" maxlength="30" show-word-limit></el-input>
         </div>
         <div class="sendItem">
@@ -58,7 +58,7 @@
           <el-input v-model="new_bot.botPassword" placeholder="请输入密码"></el-input>
         </div>
         <div class="sendItem">
-          <div class="itemTitle"><span style="color:red">*</span>机器人简介</div>
+          <div class="itemTitle"><span style="color:red">*</span>BOT简介</div>
           <el-input
               type="textarea"
               :rows="5"
@@ -70,7 +70,7 @@
           ></el-input>
         </div>
         <div class="sendItem" style="width:50%">
-          <div class="itemTitle"><span style="color:red">*</span>机器人类型</div>
+          <div class="itemTitle"><span style="color:red">*</span>BOT类型</div>
           <el-select v-model="new_bot.botType" placeholder="请选择类型">
             <el-option
                 v-for="item in options"
@@ -120,11 +120,11 @@ export default {
       options: [
         {
           value: 1,
-          label: "私聊机器人",
+          label: "私聊BOT",
         },
         {
           value: 2,
-          label: "群聊机器人",
+          label: "群聊BOT",
         },
       ],
     };

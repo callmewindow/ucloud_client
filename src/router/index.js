@@ -21,8 +21,8 @@ const routes = [
   },
   {
     path: '/user/:userId',
-    name: 'UserDetail',
-    component: () => import('@/views/UserDetail.vue'),
+    name: 'UserInfo',
+    component: () => import('@/views/UserInfo.vue'),
   },
   {
     path: '/bot/:botId',
