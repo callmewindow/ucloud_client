@@ -109,7 +109,7 @@ export default {
           this.$store.state.userId = userInfo.id;
           this.$store.state.username = userInfo.username;
           localStorage.setItem("userInfo", JSON.stringify(this.$store.state));
-          this.$message.success("登录成功，一秒后跳转到个人页面")
+          this.$message.success("登录成功，1秒后跳转到个人页面")
           setTimeout(() => {
             this.$router.push({ path: "/user/" + this.$store.state.userId });
           }, 1000);

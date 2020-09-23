@@ -88,7 +88,7 @@
                 <el-button
                   style="float: right; padding: 3px 0"
                   type="text"
-                  @click="getHotbot('f5')"
+                  @click="getNewBot('f5')"
                   >刷新</el-button
                 >
               </div>
@@ -138,13 +138,31 @@
                 >
               </div>
               <el-row class="hotBotCon" justify="space-around">
-                <el-col :span="2" v-for="o in 10" :key="o">
+                <el-col :span="2">
+                  <el-tag
+                    class="hotTag"
+                    @click="FT.building"
+                    effect="plain"
+                    type="primary"
+                    >私聊BOT</el-tag
+                  >
+                </el-col>
+                <el-col :span="2">
                   <el-tag
                     class="hotTag"
                     @click="FT.building"
                     effect="plain"
                     type="primary"
                     >群聊BOT</el-tag
+                  >
+                </el-col>
+                <el-col :span="2">
+                  <el-tag
+                    class="hotTag"
+                    @click="FT.building"
+                    effect="plain"
+                    type="primary"
+                    >代码检查BOT</el-tag
                   >
                 </el-col>
               </el-row>
@@ -176,7 +194,7 @@ export default {
       centerLogo: require("@/assets/ucloud-horizon-complex.png"),
       simpleLogo: require("@/assets/ucloud-horizon-simple.png"),
       username: "加载中",
-      hotBot: [],
+      bot_list_all: [],
       bot_list: [
         {
           botId: 1,
@@ -221,11 +239,10 @@ export default {
     if (oldUI) {
       this.$store.state.username = oldUI.username;
       this.$store.state.userId = oldUI.userId;
-      this.$store.state.userId = 3;
+      this.username = this.$store.state.username;
+      await this.getMyBot();
     }
-    this.username = this.$store.state.username;
-    await this.getMyBot();
-    await this.getHotbot();
+    await this.getNewBot();
   },
   methods: {
     toBot(botId) {
@@ -245,10 +262,15 @@ export default {
         this.haveBot = false;
       }
     },
-    async getHotbot(type) {
+    async getNewBot(type) {
       let res = await BotAPI.getAllBot();
-      if(res.data.success){
-        this.bot_list = res.data.data;
+      if (res.data.success) {
+        this.bot_list = [];
+        this.bot_list_all = res.data.data;
+        this.bot_list_all.reverse();
+        for (let i = 0; i < 4 && i < this.bot_list_all.length; i++) {
+          this.bot_list.push(this.bot_list_all[i]);
+        }
       }
       if (type == "f5") {
         this.$message.success("最新BOT已刷新");

@@ -1,19 +1,32 @@
 <template>
   <div id="navigator">
-    <el-menu id="menu" :default-active="activeIndex" class="el-menu-demo" mode="horizontal">
+    <el-menu
+      id="menu"
+      :default-active="activeIndex"
+      class="el-menu-demo"
+      mode="horizontal"
+    >
       <el-menu-item @click="FT.toPath('/home')">
-        <el-image style="height:50px;width:50px;margin:auto;margin-left:130px;" :src="wel" />
+        <el-image
+          style="height: 50px; width: 50px; margin: auto; margin-left: 130px"
+          :src="wel"
+        />
       </el-menu-item>
       <el-menu-item
         class="nav-text"
         @click="FT.toPath('/botList')"
         index="robot"
-      >机器人列表</el-menu-item>
-      <el-menu-item class="nav-text" @click="FT.building" index="college">热门</el-menu-item>
-      <el-menu-item class="nav-text" @click="FT.building" index="forum">社区</el-menu-item>
+        >机器人列表</el-menu-item
+      >
+      <el-menu-item class="nav-text" @click="FT.building" index="college"
+        >热门</el-menu-item
+      >
+      <el-menu-item class="nav-text" @click="FT.building" index="forum"
+        >社区</el-menu-item
+      >
 
       <el-menu-item
-        style="float:right;margin-right:100px;"
+        style="float: right; margin-right: 100px"
         @click="toUser"
         index="user"
       >
@@ -21,7 +34,12 @@
       </el-menu-item>
     </el-menu>
 
-    <el-card header="加入大云平台" shadow="never" id="loginWin" v-if="loginShow === 'yes'">
+    <el-card
+      header="加入大云平台"
+      shadow="never"
+      id="loginWin"
+      v-if="loginShow === 'yes'"
+    >
       <Login />
     </el-card>
   </div>
@@ -51,7 +69,7 @@ export default {
   methods: {
     toUser() {
       if (this.$store.state.userId === -1) {
-        this.$message("请先登录");
+        this.$message("请登录后查看更多内容");
         this.$router.push({ path: "/Login" });
       } else {
         this.$router.push({ path: "/user/" + this.$store.state.userId });

@@ -49,12 +49,15 @@
                         trigger="click"
                       >
                         <span class="el-dropdown-link">
-                          管理功能
+                          辅助功能
                           <i class="el-icon-cloudy el-icon--right"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
                           <el-dropdown-item command="template"
                             >获取模板</el-dropdown-item
+                          >
+                          <el-dropdown-item command="log"
+                            >查看日志</el-dropdown-item
                           >
                           <el-dropdown-item command="download"
                             >代码下载</el-dropdown-item
@@ -82,7 +85,18 @@
                     </template>
                     <template v-if="!botOwner">
                       <el-button
-                        style="float: right; padding: 1px 0; margin-left: 10px"
+                        style="
+                          float: right;
+                          padding: 1px 0;
+                          margin-left: 10px;
+                          color: #67c23a;
+                        "
+                        type="text"
+                        @click="showFork = true"
+                        >快速复制</el-button
+                      >
+                      <el-button
+                        style="float: right; padding: 1px 0"
                         type="text"
                         @click="downloadCode"
                         >代码下载</el-button
@@ -116,14 +130,38 @@
                           bot.botOwner.userName
                         }}
                       </div>
+                      <div class="introCon" v-show="!showCheck">
+                        {{ bot.botIntro }}
+                      </div>
                       <el-input
                         type="textarea"
                         :autosize="{ minRows: 10, maxRows: 20 }"
                         placeholder="业务代码为空..."
                         v-model="bot.botCode"
+                        :disabled="!codeEdit"
                       ></el-input>
-                      <div class="introCon" v-show="!showCheck">
-                        {{ bot.botIntro }}
+                      <div v-if="botOwner" style="margin-top: 5px">
+                        <el-button
+                          v-if="!codeEdit"
+                          type="primary"
+                          size="mini"
+                          icon="el-icon-edit"
+                          @click="codeEdit = true"
+                        ></el-button>
+                        <el-button
+                          v-show="codeEdit"
+                          type="success"
+                          size="mini"
+                          @click="saveCode"
+                          >保存</el-button
+                        >
+                        <el-button
+                          v-show="codeEdit"
+                          type="info"
+                          size="mini"
+                          @click="codeEdit = false"
+                          >取消</el-button
+                        >
                       </div>
                     </div>
                     <div class="checkPart" v-show="showCheck">
@@ -156,7 +194,7 @@
                 </el-card>
               </el-tab-pane>
 
-              <el-tab-pane :name="tabNames[2]">
+              <el-tab-pane :name="tabNames[2]" v-if="botOwner">
                 <div class="tab_left_part" slot="label">设置</div>
                 <el-card class="tab_right_body">
                   <el-card class="settingCard" shadow="never">
@@ -336,6 +374,40 @@
         </el-collapse-item>
       </el-collapse>
     </el-dialog>
+    <el-dialog title="BOT运行日志" :visible.sync="showLog" width="40%">
+      加载中
+    </el-dialog>
+    <el-dialog title="BOT快速复制功能" :visible.sync="showFork" width="40%">
+      <div class="introCon">
+        此举将基于当前BOT除QQ之外的所有内容，来复刻一个属于您的全新BOT（自动命名）。<br />如确认复制请输入新的QQ号与密码，并点击下方确认按钮进行复制。
+      </div>
+      <el-card class="settingCard" shadow="never">
+        <div slot="header" class="settingName">新BOT对应QQ</div>
+        <div class="settingBody">
+          <el-input
+            class="settingInput"
+            placeholder="请输入内容"
+            v-model="newBot.botQQ"
+          />
+        </div> </el-card
+      ><el-card class="settingCard" shadow="never">
+        <div slot="header" class="settingName">QQ对应密码</div>
+        <div class="settingBody">
+          <el-input
+            class="settingInput"
+            placeholder="请输入内容"
+            v-model="newBot.botPassword"
+          />
+        </div>
+      </el-card>
+      <el-button
+        type="success"
+        size="small"
+        @click="forkBot"
+        style="margin-top: 10px"
+        >确认</el-button
+      >
+    </el-dialog>
   </div>
 </template>
 
@@ -368,8 +440,16 @@ export default {
         botLog: "213",
         botCode: "import os\nprint('hello world')",
       },
+      newBot: {
+        botQQ: "",
+        botPassword: "",
+      },
+      codeEdit: false,
       showTemplate: false,
+      codeTemplate: ["si liao ji qi ren", "qun liao ji qi ren"],
       templateType: "1",
+      showLog: false,
+      showFork: false,
       showCheck: false,
       checkResult:
         "No config file found, using default configuration\n************* Module TEST.practise.classes_list.try_collection.try_collection\nC: 15, 0: Exactly one space required around assignment\ntest_daque=list()\n          ^ (bad-whitespace)\nC: 25, 0: Exactly one space required around assignment\nt1=time.time()\n  ^ (bad-whitespace)\nC: 26, 0: Exactly one space required after comma\nfor i in range(1,1000000):\n                ^ (bad-whitespace)\nC: 28, 0: Exactly one space required around assignment\nt=time.time()-t1\n ^ (bad-whitespace)\nC: 31, 0: Trailing newlines (trailing-newlines)\nC:  1, 0: Missing module docstring (missing-docstring)\nC:  6, 0: Invalid constant name 'a' (invalid-name)\nC:  7, 0: Invalid constant name 'list_a' (invalid-name)",
@@ -390,6 +470,15 @@ export default {
     };
   },
   async created() {
+    let oldUI = JSON.parse(localStorage.getItem("userInfo"));
+    console.log(oldUI);
+    if (oldUI) {
+      this.$store.state.username = oldUI.username;
+      this.$store.state.userId = oldUI.userId;
+    } else {
+      this.$message("请登录后查看更多内容");
+      this.$router.push({ path: "/Login" });
+    }
     this.botId = this.$route.params.botId;
     this.tabPos = this.$route.params.botPos;
     await this.getBotInfo();
@@ -397,6 +486,7 @@ export default {
   methods: {
     async getBotInfo() {
       let res = await BotAPI.getBotInfo(this.botId);
+      console.log(res);
       if (res.data.success) {
         this.bot = res.data.data;
         if (this.bot.botOwner.userId == this.$store.state.userId) {
@@ -430,6 +520,9 @@ export default {
       if (command == "template") {
         this.showTemplate = true;
       }
+      if (command == "log") {
+        this.showLog = true;
+      }
     },
     downloadCode() {
       this.FT.building();
@@ -446,20 +539,32 @@ export default {
       )
         .then(() => {
           if (this.templateType == "1") {
-            this.bot.botCode = "si liao ji qi ren";
+            this.bot.botCode = this.codeTemplate[0];
             this.$message.success("业务代码已替换为私聊机器人模板");
             this.showTemplate = false;
+            this.codeEdit = true;
             return;
           }
           if (this.templateType == "2") {
-            this.bot.botCode = "qun liao ji qi ren";
+            this.bot.botCode = this.codeTemplate[1];
             this.$message.success("业务代码已替换为群聊机器人模板");
             this.showTemplate = false;
+            this.codeEdit = true;
             return;
           }
           this.$message.info("更多机器人模板代码更新中");
         })
         .catch(() => {});
+    },
+    async saveCode() {
+      let res = await BotAPI.uploadCode(this.botId, this.bot.botCode);
+      if (res.data.success) {
+        this.$message.success(res.data.message);
+        this.showCheck = true;
+        this.checkResult = res.data.data.checkResult;
+      } else {
+        this.$message.error("代码更新失败，请稍后再试");
+      }
     },
     startBot() {
       this.$confirm(
@@ -474,12 +579,12 @@ export default {
         .then(async () => {
           this.disStart = true;
           let res = await BotAPI.startBot(this.botId);
-          console.log(res);
           if (res.data.success) {
             setTimeout(() => {
               this.$message.success("服务已成功部署至对应账号");
               this.disStart = false;
             }, 1000);
+            this.getBotInfo();
           } else {
             setTimeout(() => {
               this.$message.error("服务部署失败，请稍后再试");
@@ -497,9 +602,9 @@ export default {
       })
         .then(async () => {
           let res = await BotAPI.stopBot(this.botId);
-          console.log(res);
           if (res.data.success) {
             this.$message.success("BOT已停止");
+            this.getBotInfo();
           } else {
             this.$message.error("BOT停止失败，请稍后再试");
           }
@@ -508,7 +613,7 @@ export default {
     },
     resetBot() {
       this.$confirm(
-        "即将重新初始化BOT，业务代码会被重置为相应模板内容，是否继续？",
+        "即将初始化BOT，BOT将首先被停止，进而业务代码被重置为相应模板内容，是否继续？",
         "警告",
         {
           confirmButtonText: "确定",
@@ -516,11 +621,22 @@ export default {
           type: "error",
         }
       )
-        .then(() => {
+        .then(async () => {
+          // 首先停止BOT
+          await BotAPI.stopBot(this.botId);
+          // 然后更新模板代码
+          this.codeEdit = true;
+          this.bot.botCode = this.codeTemplate[this.bot.botType - 1];
+          await BotAPI.uploadCode(this.botId, this.bot.botCode);
+          // 显示重置成功
           this.$message({
             type: "success",
-            message: "BOT已重置",
+            message: "BOT已重置，可以重新运行",
           });
+          // 回到intro页面
+          this.getBotInfo();
+          this.tabPos = "intro";
+          this.$router.push("intro");
         })
         .catch(() => {});
     },
@@ -536,7 +652,6 @@ export default {
       )
         .then(async () => {
           let res = await BotAPI.deleteBot(this.botId);
-          console.log(res);
           if (res.data.success) {
             this.$message.success("BOT已删除");
             this.$router.push({ path: "/botList" });
@@ -545,6 +660,14 @@ export default {
           }
         })
         .catch(() => {});
+    },
+    async forkBot() {
+      if(this.newBot.botQQ == "" || this.newBot.botPassword == ""){
+        this.$message.error("请填写完整信息后再进行赋值操作");
+        return ;
+      }
+      this.$message.success("新BOT复制成功，可在个人主页进行查看");
+      this.showFork = false;
     },
   },
 };
@@ -637,7 +760,8 @@ export default {
 .introCon {
   color: #65676d;
   font-size: 15px;
-  margin-top: 5px;
+  margin-top: 2px;
+  margin-bottom: 4px;
 }
 .introBody /deep/ .el-textarea__inner {
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
