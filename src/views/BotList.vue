@@ -110,7 +110,7 @@ export default {
         {
           botId: 1,
           botName: "botname",
-          botType: "bottype",
+          botType: 1,
           botOwner: {
             userName: "aaaaaaaaaa"
           }
@@ -118,7 +118,7 @@ export default {
         {
           botId: 1,
           botName: "botname",
-          botType: "bottype",
+          botType: 2,
           botOwner: {
             userName: "aaaaaaaaaa"
           }
@@ -126,7 +126,7 @@ export default {
         {
           botId: 1,
           botName: "botname",
-          botType: "bottype",
+          botType: 1,
           botOwner: {
             userName: "aaaaaaaaaa"
           }
@@ -134,7 +134,7 @@ export default {
         {
           botId: 1,
           botName: "botname",
-          botType: "bottype",
+          botType: 2,
           botOwner: {
             userName: "aaaaaaaaaa"
           }
