@@ -8,7 +8,7 @@
         class="nav-text"
         @click="FT.toPath('/botList')"
         index="robot"
-      >BOT列表</el-menu-item>
+      >机器人列表</el-menu-item>
       <el-menu-item class="nav-text" @click="FT.building" index="college">热门</el-menu-item>
       <el-menu-item class="nav-text" @click="FT.building" index="forum">社区</el-menu-item>
 
