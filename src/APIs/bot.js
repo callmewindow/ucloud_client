@@ -73,3 +73,13 @@ export const uploadCode = (botId, code) => {
     })
   })
 }
+
+export const forkBot = (botId) => {
+  return axios({
+    method: 'POST',
+    url: `/bot/fork`,
+    data: QS({
+      botId: botId
+    })
+  })
+}

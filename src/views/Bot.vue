@@ -29,46 +29,63 @@
                 <el-card class="tab_right_body" style="width:90%;margin-left:5%">
                   <div slot="header" style="padding-bottom:10px">
                     <div class="introTitle">/ UCloud / bot.py</div>
-                    <el-dropdown
-                      v-if="botOwner"
-                      style="float: right;margin-left:10px;margin-top:-2px"
-                      @command="handleCommand"
-                      trigger="click"
-                    >
-                      <span class="el-dropdown-link">
-                        管理功能
-                        <i class="el-icon-cloudy el-icon--right"></i>
-                      </span>
-                      <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item command="template">获取模板</el-dropdown-item>
-                        <el-dropdown-item command="download">代码下载</el-dropdown-item>
-                        <el-dropdown-item command="check">代码审查</el-dropdown-item>
-                        <el-dropdown-item command="share" disabled>快速分享</el-dropdown-item>
-                      </el-dropdown-menu>
-                    </el-dropdown>
-                    <el-button
-                      v-if="botOwner"
-                      style="float: right;padding:1px 0;color:#67C23A"
-                      type="text"
-                      :disabled="disStart"
-                      @click="startBot"
-                    >
-                      运行部署
-                      <i v-show="disStart" class="el-icon-loading el-icon--right"></i>
-                    </el-button>
-                    <el-button
-                      v-if="!botOwner"
-                      style="float: right;padding:1px 0;"
-                      type="text"
-                      @click="downloadCode"
-                    >代码下载</el-button>
+                    <template v-if="botOwner">
+                      <el-dropdown
+                        style="float: right;margin-left:10px;margin-top:-2px"
+                        @command="handleCommand"
+                        trigger="click"
+                      >
+                        <span class="el-dropdown-link">
+                          管理功能
+                          <i class="el-icon-cloudy el-icon--right"></i>
+                        </span>
+                        <el-dropdown-menu slot="dropdown">
+                          <el-dropdown-item command="template">获取模板</el-dropdown-item>
+                          <el-dropdown-item command="download">代码下载</el-dropdown-item>
+                          <el-dropdown-item command="check">代码审查</el-dropdown-item>
+                          <el-dropdown-item command="share" disabled>快速分享</el-dropdown-item>
+                        </el-dropdown-menu>
+                      </el-dropdown>
+                      <el-button
+                        style="float: right;padding:1px 0;color:#67C23A"
+                        type="text"
+                        :disabled="disStart"
+                        @click="startBot"
+                      >
+                        运行部署
+                        <i v-show="disStart" class="el-icon-loading el-icon--right"></i>
+                      </el-button>
+                    </template>
+                    <template v-if="!botOwner">
+                      <el-button
+                        style="float: right;padding:1px 0;margin-left:10px"
+                        type="text"
+                        @click="downloadCode"
+                      >代码下载</el-button>
+                      <el-button
+                        style="float: right;padding:1px 0;color:#E6A23C;"
+                        type="text"
+                        icon="el-icon-star-off"
+                        @click="FT.building"
+                      ></el-button>
+                    </template>
                   </div>
                   <div class="introBody">
                     <div class="codePart">
                       <div class="introTip">
                         BOT部署QQ：{{bot.botQQ}}
-                        <el-tag type="success" size="small" v-if="bot.botStatus" class="statusTag">运行中</el-tag>
-                        <el-tag type="danger" size="small" v-if="!bot.botStatus" class="statusTag">未运行</el-tag>
+                        <el-tag
+                          type="success"
+                          size="small"
+                          v-if="bot.botStatus"
+                          class="statusTag"
+                        >运行中</el-tag>
+                        <el-tag
+                          type="danger"
+                          size="small"
+                          v-if="!bot.botStatus"
+                          class="statusTag"
+                        >未运行</el-tag>
                       </div>
                       <el-input
                         type="textarea"
@@ -76,9 +93,7 @@
                         placeholder="请输入内容"
                         v-model="bot.botCode"
                       ></el-input>
-                      <div class="introCon" v-show="!showCheck">
-                        {{bot.botIntro}}
-                      </div>
+                      <div class="introCon" v-show="!showCheck">{{bot.botIntro}}</div>
                     </div>
                     <div class="checkPart" v-show="showCheck">
                       <div class="introTip">运行/检查结果</div>
@@ -316,14 +331,14 @@ export default {
         this.showCheck = true;
       }
       if (command == "download") {
-        this.downloadCode()
+        this.downloadCode();
       }
       if (command == "template") {
         this.showTemplate = true;
       }
     },
     downloadCode() {
-      this.$message.info("功能开发中");
+      this.FT.building();
     },
     getTemplate() {
       this.$confirm(
@@ -337,13 +352,13 @@ export default {
       )
         .then(() => {
           if (this.templateType == "1") {
-            this.bot.botCode = "si liao ji qi ren"
+            this.bot.botCode = "si liao ji qi ren";
             this.$message.success("业务代码已替换为私聊机器人模板");
             this.showTemplate = false;
             return;
           }
           if (this.templateType == "2") {
-            this.bot.botCode = "qun liao ji qi ren"
+            this.bot.botCode = "qun liao ji qi ren";
             this.$message.success("业务代码已替换为群聊机器人模板");
             this.showTemplate = false;
             return;
@@ -496,7 +511,7 @@ export default {
 .el-icon-arrow-down {
   font-size: 12px;
 }
-.statusTag{
+.statusTag {
   margin-left: 5px;
 }
 .introTitle {
@@ -509,7 +524,7 @@ export default {
   font-size: 13px;
   margin-bottom: 5px;
 }
-.introCon{
+.introCon {
   color: #65676d;
   font-size: 15px;
   margin-top: 5px;
