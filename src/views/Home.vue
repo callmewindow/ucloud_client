@@ -5,9 +5,18 @@
       <div id="top">
         <el-row type="flex" class="row-bg" justify="center">
           <el-col :span="12">
-            <el-carousel id="carouselImg" height="222px" class="con-block" :interval="3000">
+            <el-carousel
+              id="carouselImg"
+              height="222px"
+              class="con-block"
+              :interval="3000"
+            >
               <el-carousel-item v-for="item in 4" :key="item">
-                <el-image style="width:100%;height:100%" :src="centerLogo" fit="contain" />
+                <el-image
+                  style="width: 100%; height: 100%"
+                  :src="centerLogo"
+                  fit="contain"
+                />
               </el-carousel-item>
             </el-carousel>
           </el-col>
@@ -15,37 +24,48 @@
           <el-col :span="5" id="latest">
             <div
               class="con-block selfBlock"
-              style="padding-bottom:12px"
+              style="padding-bottom: 12px"
               v-if="this.$store.state.userId == -1"
             >
               <div class="username">暂未登录</div>
             </div>
-            <div class="con-block selfBlock" v-if="this.$store.state.userId != -1">
+            <div
+              class="con-block selfBlock"
+              v-if="this.$store.state.userId != -1"
+            >
               <div class="username">
-                {{username}}
+                {{ username }}
                 <!-- <Username v-if="$store.state.teacherID != 2" :name="username" text="教师" type="1" />
                 <Username v-if="$store.state.teacherID == 2" :name="username" text="" type="1" />-->
               </div>
-              <div id="tip">我的BOT</div>
-              <div v-if="!haveBot" class="bots" style="padding-bottom:10px;cursor:default">暂未创建机器人</div>
+              <div id="tip">最近创建的BOT</div>
+              <div
+                v-if="!haveBot"
+                class="bots"
+                style="padding-bottom: 10px; cursor: default"
+              >
+                暂未创建机器人
+              </div>
               <div v-if="haveBot">
                 <div
                   class="bots"
-                  v-for="(bot,index) in my_bot_list"
+                  v-for="(bot, index) in my_bot_list"
                   :key="index"
                   @click="toBot(bot.botId)"
                 >
-                  <span>{{bot.botName +"-" }}</span>
+                  <span>{{ bot.botName + "-" }}</span>
                   <span v-if="bot.botType == 1">私聊BOT</span>
                   <span v-if="bot.botType == 2">群聊BOT</span>
                   <span v-if="bot.botType == 3">代码检查BOT</span>
                 </div>
                 <div
-                  v-if="this.my_bot_list_all.length>3"
+                  v-if="this.my_bot_list_all.length > 3"
                   class="bots"
-                  style="font-size:14px;color:gray;"
-                  @click="FT.toPath('/user/'+$store.state.userId)"
-                >更多......</div>
+                  style="font-size: 14px; color: gray"
+                  @click="FT.toPath('/user/' + $store.state.userId)"
+                >
+                  更多......
+                </div>
               </div>
             </div>
           </el-col>
@@ -64,11 +84,16 @@
           <el-col :span="18">
             <el-card>
               <div slot="header">
-                <span>推荐BOT</span>
-                <el-button style="float: right; padding: 3px 0" type="text" @click="FT.building">刷新</el-button>
+                <span>最新BOT</span>
+                <el-button
+                  style="float: right; padding: 3px 0"
+                  type="text"
+                  @click="getHotbot('f5')"
+                  >刷新</el-button
+                >
               </div>
               <el-row class="hotBotCon" justify="space-around">
-                <el-col :span="6" v-for="(bot,index) in bot_list" :key="index">
+                <el-col :span="6" v-for="(bot, index) in bot_list" :key="index">
                   <div class="botCard">
                     <el-row style="margin: 0">
                       <el-col>
@@ -76,14 +101,19 @@
                           <el-link
                             type="primary"
                             :underline="false"
-                            style="font-size: 20px;"
-                            @click="FT.toPath('/bot/'+bot.botId)"
-                          >{{ bot.botName }}</el-link>
+                            style="font-size: 20px"
+                            @click="FT.toPath('/bot/' + bot.botId)"
+                            >{{ bot.botName }}</el-link
+                          >
                         </el-row>
                         <el-row v-if="bot.botType == 1">类型：私聊BOT</el-row>
                         <el-row v-if="bot.botType == 2">类型：群聊BOT</el-row>
-                        <el-row v-if="bot.botType == 3">类型：代码检查BOT</el-row>
-                        <el-row style="margin-top:3px">创建者：{{ bot.botOwner.userName }}</el-row>
+                        <el-row v-if="bot.botType == 3"
+                          >类型：代码检查BOT</el-row
+                        >
+                        <el-row style="margin-top: 3px"
+                          >创建者：{{ bot.botOwner.userName }}</el-row
+                        >
                       </el-col>
                     </el-row>
                   </div>
@@ -100,11 +130,22 @@
             <el-card>
               <div slot="header">
                 <span>热门类型</span>
-                <el-button style="float: right; padding: 3px 0" type="text" @click="FT.building">刷新</el-button>
+                <el-button
+                  style="float: right; padding: 3px 0"
+                  type="text"
+                  @click="FT.building"
+                  >刷新</el-button
+                >
               </div>
               <el-row class="hotBotCon" justify="space-around">
                 <el-col :span="2" v-for="o in 10" :key="o">
-                  <el-tag class="hotTag" @click="FT.building" effect="plain" type="primary">群聊BOT</el-tag>
+                  <el-tag
+                    class="hotTag"
+                    @click="FT.building"
+                    effect="plain"
+                    type="primary"
+                    >群聊BOT</el-tag
+                  >
                 </el-col>
               </el-row>
             </el-card>
@@ -112,7 +153,6 @@
         </el-row>
       </div>
     </div>
-
     <Footer position="center" />
   </div>
 </template>
@@ -171,70 +211,47 @@ export default {
           },
         },
       ],
-      my_bot_list: [
-        {
-          botId: 1,
-          botName: "botname",
-          botType: 1,
-          botStatus: false,
-          botQQ: 1111111111,
-        },
-        {
-          botId: 1,
-          botName: "botname",
-          botType: 2,
-          botStatus: true,
-          botQQ: 1111111111,
-        },
-        {
-          botId: 1,
-          botName: "botname",
-          botType: 2,
-          botStatus: false,
-          botQQ: 1111111111,
-        },
-      ],
+      my_bot_list: [],
       my_bot_list_all: [],
     };
   },
   async created() {
-    //填充旧数据
-    // let oldUI = JSON.parse(localStorage.getItem("userinfo"));
-    // if (oldUI) {
-    //   this.$store.state.email = oldUI.email;
-    //   this.$store.state.nickname = oldUI.nickname;
-    //   this.$store.state.permission = oldUI.permission;
-    //   this.$store.state.teacherID = oldUI.teacherID;
-    //   this.$store.state.userId = oldUI.userId;
-    // }
-    this.username = this.$store.state.nickname;
-    // let temp = await CourseAPI.getUserCourse(this.$store.state.userId);
-    // console.log(temp);
-    // if (temp.data.message == "该用户未参加任何课程。") {
-    //   this.haveBot = false;
-    // } else {
-    //   this.haveBot = true;
-    //   this.allSelect = temp.data.courses;
-    //   this.allSelect.reverse();
-    //   for (let index = 0; index < this.allSelect.length && index < 3; index++) {
-    //     this.selectbots.push(this.allSelect[index]);
-    //   }
-    // }
-    // console.log(this.selectbots);
-    // await this.getHotCourse();
+    // 填充旧数据
+    let oldUI = JSON.parse(localStorage.getItem("userInfo"));
+    if (oldUI) {
+      this.$store.state.username = oldUI.username;
+      this.$store.state.userId = oldUI.userId;
+      this.$store.state.userId = 3;
+    }
+    this.username = this.$store.state.username;
+    await this.getMyBot();
+    await this.getHotbot();
   },
   methods: {
     toBot(botId) {
       FT.toPath("/bot/" + botId);
     },
+    async getMyBot() {
+      let res = await UserAPI.getUserInfo(this.$store.state.userId);
+      console.log(res);
+      if (res.data.success) {
+        this.haveBot = true;
+        this.my_bot_list_all = res.data.data;
+        this.my_bot_list_all.reverse();
+        for (let i = 0; i < 3 && i < this.my_bot_list_all.length; i++) {
+          this.my_bot_list.push(this.my_bot_list_all[i]);
+        }
+      } else {
+        this.haveBot = false;
+      }
+    },
     async getHotbot(type) {
-      let temp = await botAPI.getHotbots();
-      this.hotBot = temp.data.bots;
-      for (let i = this.hotBot.length; i > 8; i--) {
-        this.hotbot.pop();
+      let res = await BotAPI.getAllBot();
+      if(res.data.success){
+        this.bot_list = res.data.data;
       }
       if (type == "f5") {
-        this.$message.success("推荐BOT已刷新");
+        this.$message.success("最新BOT已刷新");
       }
     },
   },
@@ -276,7 +293,7 @@ export default {
   cursor: pointer;
   margin-top: 7px;
   margin-left: 15px;
-  font-size: 16px;
+  font-size: 14px;
 }
 #carouselImg {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
@@ -325,7 +342,7 @@ export default {
   border-bottom: 1px solid rgb(128, 128, 128);
   margin-bottom: 20px;
 }
-.botCard .el-row{
+.botCard .el-row {
   font-size: 15px;
 }
 .hotTag {

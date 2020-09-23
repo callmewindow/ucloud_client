@@ -6,14 +6,16 @@
         <el-col :span="16">
           <el-row id="up_part">
             <el-col :span="4">
-              <el-card id="up_left_part">{{bot.botName}}</el-card>
+              <el-card id="up_left_part">{{ bot.botName }}</el-card>
             </el-col>
 
             <el-col :span="20">
               <el-card id="up_right_part">
                 <div id="course_name" v-if="bot.botType == 1">私聊机器人</div>
                 <div id="course_name" v-if="bot.botType == 2">群聊机器人</div>
-                <div id="course_name" v-if="bot.botType == 3">代码检查机器人</div>
+                <div id="course_name" v-if="bot.botType == 3">
+                  代码检查机器人
+                </div>
               </el-card>
             </el-col>
           </el-row>
@@ -23,15 +25,26 @@
       <el-row id="down_part" type="flex" class="row-bg" justify="center">
         <el-col :span="16">
           <el-card id="down_card">
-            <el-tabs v-model="tabPos" tab-position="left" @tab-click="clickCommunity">
+            <el-tabs
+              v-model="tabPos"
+              tab-position="left"
+              @tab-click="clickCommunity"
+            >
               <el-tab-pane :name="tabNames[0]">
                 <div class="tab_left_part" slot="label">业务代码</div>
-                <el-card class="tab_right_body" style="width:90%;margin-left:5%">
-                  <div slot="header" style="padding-bottom:10px">
+                <el-card
+                  class="tab_right_body"
+                  style="width: 90%; margin-left: 5%"
+                >
+                  <div slot="header" style="padding-bottom: 10px">
                     <div class="introTitle">/ UCloud / bot.py</div>
                     <template v-if="botOwner">
                       <el-dropdown
-                        style="float: right;margin-left:10px;margin-top:-2px"
+                        style="
+                          float: right;
+                          margin-left: 10px;
+                          margin-top: -2px;
+                        "
                         @command="handleCommand"
                         trigger="click"
                       >
@@ -40,30 +53,42 @@
                           <i class="el-icon-cloudy el-icon--right"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
-                          <el-dropdown-item command="template">获取模板</el-dropdown-item>
-                          <el-dropdown-item command="download">代码下载</el-dropdown-item>
-                          <el-dropdown-item command="check">代码审查</el-dropdown-item>
-                          <el-dropdown-item command="share" disabled>快速分享</el-dropdown-item>
+                          <el-dropdown-item command="template"
+                            >获取模板</el-dropdown-item
+                          >
+                          <el-dropdown-item command="download"
+                            >代码下载</el-dropdown-item
+                          >
+                          <el-dropdown-item command="check"
+                            >代码审查</el-dropdown-item
+                          >
+                          <el-dropdown-item command="share" disabled
+                            >快速分享</el-dropdown-item
+                          >
                         </el-dropdown-menu>
                       </el-dropdown>
                       <el-button
-                        style="float: right;padding:1px 0;color:#67C23A"
+                        style="float: right; padding: 1px 0; color: #67c23a"
                         type="text"
                         :disabled="disStart"
                         @click="startBot"
                       >
                         运行部署
-                        <i v-show="disStart" class="el-icon-loading el-icon--right"></i>
+                        <i
+                          v-show="disStart"
+                          class="el-icon-loading el-icon--right"
+                        ></i>
                       </el-button>
                     </template>
                     <template v-if="!botOwner">
                       <el-button
-                        style="float: right;padding:1px 0;margin-left:10px"
+                        style="float: right; padding: 1px 0; margin-left: 10px"
                         type="text"
                         @click="downloadCode"
-                      >代码下载</el-button>
+                        >代码下载</el-button
+                      >
                       <el-button
-                        style="float: right;padding:1px 0;color:#E6A23C;"
+                        style="float: right; padding: 1px 0; color: #e6a23c"
                         type="text"
                         icon="el-icon-star-off"
                         @click="FT.building"
@@ -73,34 +98,40 @@
                   <div class="introBody">
                     <div class="codePart">
                       <div class="introTip">
-                        BOT部署QQ：{{bot.botQQ}}
                         <el-tag
                           type="success"
                           size="small"
                           v-if="bot.botStatus"
                           class="statusTag"
-                        >运行中</el-tag>
+                          >运行中</el-tag
+                        >
                         <el-tag
                           type="danger"
                           size="small"
                           v-if="!bot.botStatus"
                           class="statusTag"
-                        >未运行</el-tag>
+                          >未运行</el-tag
+                        >
+                        BOT部署QQ：{{ bot.botQQ }}—持有者：{{
+                          bot.botOwner.userName
+                        }}
                       </div>
                       <el-input
                         type="textarea"
-                        :autosize="{ minRows: 10, maxRows: 20}"
-                        placeholder="请输入内容"
+                        :autosize="{ minRows: 10, maxRows: 20 }"
+                        placeholder="业务代码为空..."
                         v-model="bot.botCode"
                       ></el-input>
-                      <div class="introCon" v-show="!showCheck">{{bot.botIntro}}</div>
+                      <div class="introCon" v-show="!showCheck">
+                        {{ bot.botIntro }}
+                      </div>
                     </div>
                     <div class="checkPart" v-show="showCheck">
                       <div class="introTip">运行/检查结果</div>
                       <el-input
                         disabled
                         type="textarea"
-                        :autosize="{ minRows: 5, maxRows: 10}"
+                        :autosize="{ minRows: 5, maxRows: 10 }"
                         placeholder="暂无结果"
                         v-model="checkResult"
                       ></el-input>
@@ -113,8 +144,15 @@
                 <div class="tab_left_part" slot="label">提议</div>
                 <el-card class="tab_right_body">
                   <div
-                    style="color: #303133; font-size: 16px; float: left;padding-bottom: 20px"
-                  >功能开发中，敬请期待</div>
+                    style="
+                      color: #303133;
+                      font-size: 16px;
+                      float: left;
+                      padding-bottom: 20px;
+                    "
+                  >
+                    功能开发中，敬请期待
+                  </div>
                 </el-card>
               </el-tab-pane>
 
@@ -132,10 +170,11 @@
                       />
                       <el-button
                         type="primary"
-                        style="margin-left:10px"
+                        style="margin-left: 10px"
                         size="small"
                         :disabled="disName"
-                      >修改名称</el-button>
+                        >修改名称</el-button
+                      >
                     </div>
                   </el-card>
                   <el-card class="settingCard" shadow="never">
@@ -145,7 +184,7 @@
                         v-model="bot.botType"
                         :disabled="disType"
                         placeholder="请选择类型"
-                        style="width:50%"
+                        style="width: 50%"
                       >
                         <el-option
                           v-for="item in options"
@@ -156,10 +195,11 @@
                       </el-select>
                       <el-button
                         type="primary"
-                        style="margin-left:10px"
+                        style="margin-left: 10px"
                         size="small"
                         :disabled="disType"
-                      >修改类型</el-button>
+                        >修改类型</el-button
+                      >
                     </div>
                   </el-card>
                   <el-card class="settingCard" shadow="never">
@@ -173,10 +213,11 @@
                       />
                       <el-button
                         type="primary"
-                        style="margin-left:10px"
+                        style="margin-left: 10px"
                         size="small"
                         :disabled="disQQ"
-                      >修改QQ</el-button>
+                        >修改QQ</el-button
+                      >
                     </div>
                   </el-card>
 
@@ -184,27 +225,66 @@
                     <div slot="header" class="settingName">危险操作</div>
                     <div class="settingBody" id="danger">
                       <el-card class="settingCard" shadow="never">
-                        <div slot="header" class="settingName" style="font-size:12px">终止</div>
+                        <div
+                          slot="header"
+                          class="settingName"
+                          style="font-size: 12px"
+                        >
+                          终止
+                        </div>
                         <div class="settingBody">
-                          <el-button type="danger" size="mini" @click="stopBot">停止BOT</el-button>
+                          <el-button type="danger" size="mini" @click="stopBot"
+                            >停止BOT</el-button
+                          >
                         </div>
                       </el-card>
                       <el-card class="settingCard" shadow="never">
-                        <div slot="header" class="settingName" style="font-size:12px">重装</div>
+                        <div
+                          slot="header"
+                          class="settingName"
+                          style="font-size: 12px"
+                        >
+                          重装
+                        </div>
                         <div class="settingBody">
-                          <el-button type="danger" size="mini" @click="resetBot">重置BOT</el-button>
+                          <el-button type="danger" size="mini" @click="resetBot"
+                            >重置BOT</el-button
+                          >
                         </div>
                       </el-card>
                       <el-card class="settingCard" shadow="never">
-                        <div slot="header" class="settingName" style="font-size:12px">清除</div>
+                        <div
+                          slot="header"
+                          class="settingName"
+                          style="font-size: 12px"
+                        >
+                          清除
+                        </div>
                         <div class="settingBody">
-                          <el-button type="danger" size="mini" @click="deleteBot">删除BOT</el-button>
+                          <el-button
+                            type="danger"
+                            size="mini"
+                            @click="deleteBot"
+                            >删除BOT</el-button
+                          >
                         </div>
                       </el-card>
                       <el-card class="settingCard" shadow="never">
-                        <div slot="header" class="settingName" style="font-size:12px">转移</div>
+                        <div
+                          slot="header"
+                          class="settingName"
+                          style="font-size: 12px"
+                        >
+                          转移
+                        </div>
                         <div class="settingBody">
-                          <el-button type="danger" disabled size="mini" @click="deleteBot">更新持有者</el-button>
+                          <el-button
+                            type="danger"
+                            disabled
+                            size="mini"
+                            @click="deleteBot"
+                            >更新持有者</el-button
+                          >
                         </div>
                       </el-card>
                     </div>
@@ -220,37 +300,37 @@
       <el-collapse v-model="templateType" accordion>
         <el-collapse-item title="私聊机器人" name="1">
           <el-card class="settingCard" shadow="never">
-            <div
-              slot="header"
-              class="settingName"
-              style="font-size:14px"
-            >可以捕获对应QQ所接收到的一些私聊内容，在自行处理后便可实现私密的自动对话</div>
+            <div slot="header" class="settingName" style="font-size: 14px">
+              可以捕获对应QQ所接收到的一些私聊内容，在自行处理后便可实现私密的自动对话
+            </div>
             <div class="settingBody">
-              <el-button type="primary" size="mini" @click="getTemplate">替换模板</el-button>
+              <el-button type="primary" size="mini" @click="getTemplate"
+                >替换模板</el-button
+              >
             </div>
           </el-card>
         </el-collapse-item>
         <el-collapse-item title="群聊机器人" name="2">
           <el-card class="settingCard" shadow="never">
-            <div
-              slot="header"
-              class="settingName"
-              style="font-size:14px"
-            >可以捕获对应QQ所在群聊中的一些内容，在自行处理后便可实现一个存在于群聊中的对话机器人，活跃气氛</div>
+            <div slot="header" class="settingName" style="font-size: 14px">
+              可以捕获对应QQ所在群聊中的一些内容，在自行处理后便可实现一个存在于群聊中的对话机器人，活跃气氛
+            </div>
             <div class="settingBody">
-              <el-button type="primary" size="mini" @click="getTemplate">替换模板</el-button>
+              <el-button type="primary" size="mini" @click="getTemplate"
+                >替换模板</el-button
+              >
             </div>
           </el-card>
         </el-collapse-item>
         <el-collapse-item title="代码检查机器人" name="3">
           <el-card class="settingCard" shadow="never">
-            <div
-              slot="header"
-              class="settingName"
-              style="font-size:14px"
-            >可以捕获对应QQ所在群聊中的文本代码，基于相应的静态检查工具便可将检查结果返回在群聊中</div>
+            <div slot="header" class="settingName" style="font-size: 14px">
+              可以捕获对应QQ所在群聊中的文本代码，基于相应的静态检查工具便可将检查结果返回在群聊中
+            </div>
             <div class="settingBody">
-              <el-button type="primary" size="mini" @click="getTemplate">替换模板</el-button>
+              <el-button type="primary" size="mini" @click="getTemplate"
+                >替换模板</el-button
+              >
             </div>
           </el-card>
         </el-collapse-item>
@@ -310,12 +390,23 @@ export default {
     };
   },
   async created() {
+    this.botId = this.$route.params.botId;
     this.tabPos = this.$route.params.botPos;
-    if (this.$store.state.userId == this.bot.botOwner.userId) {
-      this.botOwner = true;
-    }
+    await this.getBotInfo();
   },
   methods: {
+    async getBotInfo() {
+      let res = await BotAPI.getBotInfo(this.botId);
+      if (res.data.success) {
+        this.bot = res.data.data;
+        if (this.bot.botOwner.userId == this.$store.state.userId) {
+          this.botOwner = true;
+        }
+      } else {
+        this.$message.error("获取BOT详情失败，已跳转至BOT列表页");
+        this.$router.push({ path: "/botList" });
+      }
+    },
     clickCommunity(target) {
       // 切换路由
       let toPath = "/bot/" + this.$route.params.botId + "/" + target.name;
@@ -324,6 +415,9 @@ export default {
         this.$router.push({
           path: "/bot/" + this.$route.params.botId + "/" + target.name,
         });
+      }
+      if (target.name !== "intro") {
+        this.showCheck = false;
       }
     },
     handleCommand(command) {
@@ -377,12 +471,21 @@ export default {
           type: "warning",
         }
       )
-        .then(() => {
+        .then(async () => {
           this.disStart = true;
-          setTimeout(() => {
-            this.$message.success("服务已成功部署至对应账号");
-            this.disStart = false;
-          }, 2000);
+          let res = await BotAPI.startBot(this.botId);
+          console.log(res);
+          if (res.data.success) {
+            setTimeout(() => {
+              this.$message.success("服务已成功部署至对应账号");
+              this.disStart = false;
+            }, 1000);
+          } else {
+            setTimeout(() => {
+              this.$message.error("服务部署失败，请稍后再试");
+              this.disStart = false;
+            }, 1000);
+          }
         })
         .catch(() => {});
     },
@@ -392,11 +495,14 @@ export default {
         cancelButtonText: "取消",
         type: "error",
       })
-        .then(() => {
-          this.$message({
-            type: "success",
-            message: "BOT已停止",
-          });
+        .then(async () => {
+          let res = await BotAPI.stopBot(this.botId);
+          console.log(res);
+          if (res.data.success) {
+            this.$message.success("BOT已停止");
+          } else {
+            this.$message.error("BOT停止失败，请稍后再试");
+          }
         })
         .catch(() => {});
     },
@@ -428,11 +534,15 @@ export default {
           type: "error",
         }
       )
-        .then(() => {
-          this.$message({
-            type: "success",
-            message: "BOT已删除",
-          });
+        .then(async () => {
+          let res = await BotAPI.deleteBot(this.botId);
+          console.log(res);
+          if (res.data.success) {
+            this.$message.success("BOT已删除");
+            this.$router.push({ path: "/botList" });
+          } else {
+            this.$message.error("BOT删除失败，请稍后再试");
+          }
         })
         .catch(() => {});
     },
@@ -512,7 +622,7 @@ export default {
   font-size: 12px;
 }
 .statusTag {
-  margin-left: 5px;
+  margin-left: 0px;
 }
 .introTitle {
   float: left;

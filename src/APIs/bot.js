@@ -26,7 +26,7 @@ export const getAllBot = () => {
   })
 }
 
-export const getBot = (botId) => {
+export const getBotInfo = (botId) => {
   return axios({
     method: 'GET',
     url: `/bot/info?botId=${botId}`

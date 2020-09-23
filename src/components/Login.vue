@@ -100,19 +100,22 @@ export default {
   methods: {
     async doSubmitLogin() {
       try {
-        const userInfo = await userAPI.login(
+        const lr = await userAPI.login(
           this.login.username,
           this.login.password
         );
-        console.log(userInfo);
-        return;
-        this.$store.state.userId = userInfo.data.id;
-        this.$store.state.teacherID = userInfo.data.teacher_identity;
-        this.$store.state.email = userInfo.data.email;
-        localStorage.setItem("userinfo", JSON.stringify(this.$store.state));
-        setTimeout(() => {
-          this.$router.push({ path: "/user/" + this.$store.state.userId });
-        }, 2000);
+        if (lr.data.success) {
+          let userInfo = lr.data.data;
+          this.$store.state.userId = userInfo.id;
+          this.$store.state.username = userInfo.username;
+          localStorage.setItem("userInfo", JSON.stringify(this.$store.state));
+          this.$message.success("登录成功，一秒后跳转到个人页面")
+          setTimeout(() => {
+            this.$router.push({ path: "/user/" + this.$store.state.userId });
+          }, 1000);
+        }else{
+          this.$message.error(lr.data.message);
+        }
       } catch (e) {
         this.$message.error(e.toString());
       }
@@ -125,14 +128,16 @@ export default {
               this.register.username,
               this.register.password
             );
-            console.log(userInfo);
-            return ;
-            this.$message.success("登录成功，欢迎加入大云平台");
-            this.pos = "login";
-            this.login.username = this.register.username;
-            this.login.password = this.register.password;
+            if (rr.data.success) {
+              this.$message.success("注册成功，欢迎加入大云平台！");
+              this.pos = "login";
+              this.login.username = this.register.username;
+              this.login.password = this.register.password;
+            } else {
+              this.$message.error(rr.data.message);
+            }
           } catch (e) {
-            this.$message.error("哦豁，" + e.toString());
+            this.$message.error("未知错误：" + e.toString());
           }
         } else {
           return false;
