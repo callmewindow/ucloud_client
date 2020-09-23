@@ -2,19 +2,17 @@
   <div id="navigator">
     <el-menu id="menu" :default-active="activeIndex" class="el-menu-demo" mode="horizontal">
       <el-menu-item @click="FT.toPath('/home')">
-        <el-image style="height:50px;width:130px;margin:auto;margin-left:100px;" :src="wel" />
+        <el-image style="height:50px;width:50px;margin:auto;margin-left:130px;" :src="wel" />
       </el-menu-item>
       <el-menu-item
-        v-if="login != 'yes'"
         class="nav-text"
-        @click="FT.toPath('/robotList')"
+        @click="FT.toPath('/botList')"
         index="robot"
-      >机器人</el-menu-item>
-      <el-menu-item v-if="login != 'yes'" class="nav-text" @click="FT.building" index="college">学校</el-menu-item>
-      <el-menu-item v-if="login != 'yes'" class="nav-text" @click="FT.building" index="forum">圈子</el-menu-item>
+      >BOT列表</el-menu-item>
+      <el-menu-item class="nav-text" @click="FT.building" index="college">热门</el-menu-item>
+      <el-menu-item class="nav-text" @click="FT.building" index="forum">社区</el-menu-item>
 
       <el-menu-item
-        v-if="login != 'yes'"
         style="float:right;margin-right:100px;"
         @click="toUser"
         index="user"
@@ -44,7 +42,7 @@ export default {
   data() {
     return {
       FT,
-      wel: require("@/assets/logo-horizon-simple.png"),
+      wel: require("@/assets/ucloud-logo.png"),
       activeIndex: this.activeFunc,
       now: this.activeFunc,
       loginShow: this.login,
@@ -80,6 +78,6 @@ export default {
   max-width: 500px;
 }
 .nav-text {
-  margin-left: 30px;
+  margin-left: 20px;
 }
 </style>

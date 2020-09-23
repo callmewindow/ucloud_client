@@ -16,8 +16,8 @@ const routes = [
   },
   {
     path: '/botlist',
-    name: 'CourseList',
-    component: () => import('@/views/CourseList.vue'),
+    name: 'BotList',
+    component: () => import('@/views/BotList.vue'),
   },
   {
     path: '/user/:userId',
@@ -26,23 +26,14 @@ const routes = [
   },
   {
     path: '/bot/:botId',
-    redirect: '/course/:courseId/intro'
-  },
-  {
-    path: '/bot/:botId/:botPos/',
-    name: 'Course',
-    component: () => import('@/views/Course.vue'),
+    name: 'Bot',
+    component: () => import('@/views/Bot.vue'),
   },
   {
     path: '/Login',
     name: 'Login',
     component: () =>
       import('@/components/LoginTemp.vue'),
-  },
-  {
-    path: '/test',
-    name: 'FriendList',
-    component: () => import('@/components/FriendList.vue'),
   },
 
 ]
