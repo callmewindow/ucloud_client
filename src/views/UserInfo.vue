@@ -93,36 +93,7 @@ export default {
       username: "123123123",
       bot_total: 0,
       bot_run: 0,
-      bot_list: [
-        {
-          botId: 1,
-          botName: "botname",
-          botType: 1,
-          botStatus: false,
-          botQQ: 1111111111,
-        },
-        {
-          botId: 1,
-          botName: "botname",
-          botType: 2,
-          botStatus: true,
-          botQQ: 1111111111,
-        },
-        {
-          botId: 1,
-          botName: "botname",
-          botType: 1,
-          botStatus: false,
-          botQQ: 1111111111,
-        },
-        {
-          botId: 1,
-          botName: "botname",
-          botType: 2,
-          botStatus: true,
-          botQQ: 1111111111,
-        },
-      ],
+      bot_list: [],
       activeName: "1"
     };
   },
@@ -142,14 +113,19 @@ export default {
   methods: {
     async get_user_info() {
       try {
-        //const res = await userAPI.getUserInfo(this.$store.state.userId)
-        //window.console.log(list.data.data);
-        //this.bot_list = list.data.data.bots;
-        //this.username = this.$store.state.username;
-        this.bot_total = this.bot_list.length;
-        for (let i = 0; i < this.bot_total; i++)
-          if (this.bot_list[i].botStatus)
-            this.bot_run++;
+        //const res = await userAPI.getUserInfo(1)
+        const res = await userAPI.getUserInfo(this.$store.state.userId);
+        this.username = this.$store.state.username;
+        //window.console.log(res.data);
+        if (res.data.success) {
+          this.bot_list = res.data.data;
+          this.bot_total = this.bot_list.length;
+          for (let i = 0; i < this.bot_total; i++)
+            if (this.bot_list[i].botStatus)
+              this.bot_run++;
+        } else {
+          this.$message.error("请求错误");
+        }
       } catch (e) {
         this.$message.error("请求超时");
       }

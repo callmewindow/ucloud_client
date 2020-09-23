@@ -1,6 +1,6 @@
 <template>
   <div id="CL">
-    <Navigator active-func="robot" />
+    <Navigator active-func="robot"/>
     <el-row :gutter="20" style="margin-left: 15%; margin-right: 15%">
       <el-col :span="3" style="margin-top: 90px;float:left">
         <el-button type="primary" style="float: right" @click="showAddBot = true">
@@ -106,40 +106,7 @@ export default {
     return {
       frontTool,
       showAddBot: false,
-      bot_list: [
-        {
-          botId: 1,
-          botName: "botname",
-          botType: 1,
-          botOwner: {
-            userName: "aaaaaaaaaa"
-          }
-        },
-        {
-          botId: 1,
-          botName: "botname",
-          botType: 2,
-          botOwner: {
-            userName: "aaaaaaaaaa"
-          }
-        },
-        {
-          botId: 1,
-          botName: "botname",
-          botType: 1,
-          botOwner: {
-            userName: "aaaaaaaaaa"
-          }
-        },
-        {
-          botId: 1,
-          botName: "botname",
-          botType: 2,
-          botOwner: {
-            userName: "aaaaaaaaaa"
-          }
-        },
-      ],
+      bot_list: [],
       new_bot: {
         botName: "",
         botType: 1,
@@ -175,9 +142,13 @@ export default {
   methods: {
     async get_all_bot() {
       try {
-        //const list = await botAPI.getAllBot();
+        const list = await botAPI.getAllBot();
         //window.console.log(list.data.data);
-        //this.bot_list = list.data.data;
+        if (list.data.success) {
+          this.bot_list = list.data.data;
+        } else {
+          this.$message.error("请求错误");
+        }
       } catch (e) {
         this.$message.error("请求超时");
       }
@@ -188,7 +159,7 @@ export default {
         return;
       }
       try {
-        const r = await botAPI.createBot(
+        const res = await botAPI.createBot(
             this.new_bot.botName,
             this.new_bot.botIntro,
             this.new_bot.botQQ,
@@ -196,7 +167,8 @@ export default {
             this.new_bot.botType,
             this.$store.state.userId
         );
-        await this.$router.push({path: "/robot/" + r.data.data.botId})
+        //window.console.log(res.data);
+        await this.$router.push({path: "/bot/" + res.data.data.botId})
       } catch (error) {
         console.log(error);
       }
