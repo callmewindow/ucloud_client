@@ -121,11 +121,12 @@ export default {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
           try {
-            // const userInfo = await userAPI.register(
-            //   this.register.username,
-            //   this.register.password
-            // );
-            // console.log(userInfo);
+            const rr = await userAPI.register(
+              this.register.username,
+              this.register.password
+            );
+            console.log(userInfo);
+            return ;
             this.$message.success("登录成功，欢迎加入大云平台");
             this.pos = "login";
             this.login.username = this.register.username;
