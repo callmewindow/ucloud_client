@@ -19,6 +19,12 @@
       </el-col>
     </el-row>
 
+    <el-row style="margin-left: 16%; margin-right: 16%; margin-top: 10px">
+      <el-tabs v-model="activeName">
+        <el-tab-pane label="我的BOT" name="first"></el-tab-pane>
+      </el-tabs>
+    </el-row>
+
     <el-row :gutter="20" style="margin-left: 15%; margin-right: 15%;">
       <el-col>
         <el-row :gutter="20">
@@ -97,25 +103,26 @@ export default {
         {
           botId: 1,
           botName: "botname",
-          botType: "bottype",
+          botType: 2,
           botStatus: true,
           botQQ: 1111111111,
         },
         {
           botId: 1,
           botName: "botname",
-          botType: "bottype",
+          botType: 1,
           botStatus: false,
           botQQ: 1111111111,
         },
         {
           botId: 1,
           botName: "botname",
-          botType: "bottype",
+          botType: 2,
           botStatus: true,
           botQQ: 1111111111,
         },
       ],
+      activeName: "first"
     };
   },
   created() {
