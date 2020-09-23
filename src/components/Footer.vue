@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div v-if="pos=='left'" class="footer footer-l">Copyright © 2020 Beacon</div>
-    <div v-if="pos=='center'||!pos" class="footer">Copyright © 2020 Beacon</div>
-    <div v-if="pos=='right'" class="footer footer-r">Copyright © 2020 Beacon</div>
+    <div v-if="pos=='left'" class="footer footer-l">Copyright © 2020 UCloud</div>
+    <div v-if="pos=='center'||!pos" class="footer">Copyright © 2020 UCloud</div>
+    <div v-if="pos=='right'" class="footer footer-r">Copyright © 2020 UCloud</div>
   </div>
 </template>
 

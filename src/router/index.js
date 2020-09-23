@@ -26,6 +26,10 @@ const routes = [
   },
   {
     path: '/bot/:botId',
+    redirect: '/bot/:botId/intro'
+  },
+  {
+    path: '/bot/:botId/:botPos',
     name: 'Bot',
     component: () => import('@/views/Bot.vue'),
   },
