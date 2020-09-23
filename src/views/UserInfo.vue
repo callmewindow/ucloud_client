@@ -21,11 +21,12 @@
 
     <el-row style="margin-left: 16%; margin-right: 16%; margin-top: 10px">
       <el-tabs v-model="activeName">
-        <el-tab-pane label="我的BOT" name="first"></el-tab-pane>
+        <el-tab-pane label="我的BOT" name="1"></el-tab-pane>
+        <el-tab-pane label="收藏的BOT" name="2"></el-tab-pane>
       </el-tabs>
     </el-row>
 
-    <el-row :gutter="20" style="margin-left: 15%; margin-right: 15%;">
+    <el-row :gutter="20" style="margin-left: 15%; margin-right: 15%;" v-if="activeName==='1'">
       <el-col>
         <el-row :gutter="20">
           <el-col
@@ -122,7 +123,7 @@ export default {
           botQQ: 1111111111,
         },
       ],
-      activeName: "first"
+      activeName: "1"
     };
   },
   created() {
