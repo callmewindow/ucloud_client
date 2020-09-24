@@ -74,12 +74,16 @@ export const uploadCode = (botId, code) => {
   })
 }
 
-export const forkBot = (botId) => {
+export const forkBot = (botId, userId, botName, botQQ, botPassword) => {
   return axios({
     method: 'POST',
     url: `/bot/fork`,
     data: QS({
-      botId: botId
+      botId,
+      userId,
+      botName,
+      botQQ,
+      botPassword
     })
   })
 }

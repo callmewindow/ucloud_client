@@ -93,7 +93,7 @@
                         "
                         type="text"
                         @click="showFork = true"
-                        >快速复制</el-button
+                        >复制BOT</el-button
                       >
                       <el-button
                         style="float: right; padding: 1px 0"
@@ -167,7 +167,6 @@
                     <div class="checkPart" v-show="showCheck">
                       <div class="introTip">运行/检查结果</div>
                       <el-input
-                        disabled
                         type="textarea"
                         :autosize="{ minRows: 5, maxRows: 10 }"
                         placeholder="暂无结果"
@@ -374,13 +373,52 @@
         </el-collapse-item>
       </el-collapse>
     </el-dialog>
-    <el-dialog title="BOT运行日志" :visible.sync="showLog" width="40%">
-      加载中
+    <el-dialog
+      title="BOT运行日志"
+      :fullscreen="true"
+      :visible.sync="showLog"
+      width="40%"
+    >
+      <el-row>
+        <el-col :span="20" :offset="1">
+          <div class="introTip">
+            日志详情
+            <el-button
+              type="primary"
+              style="margin-left: 10px"
+              size="mini"
+              @click="getNewLog"
+              for="logInput"
+              >刷新日志</el-button
+            >
+          </div>
+
+          <el-input
+            ref="logCon"
+            type="textarea"
+            :autosize="{ minRows: 10, maxRows: 25 }"
+            resize="both"
+            placeholder="暂无运行日志内容"
+            v-model="bot.botLog"
+          ></el-input>
+        </el-col>
+      </el-row>
     </el-dialog>
     <el-dialog title="BOT快速复制功能" :visible.sync="showFork" width="40%">
       <div class="introCon">
-        此举将基于当前BOT除QQ之外的所有内容，来复刻一个属于您的全新BOT（自动命名）。<br />如确认复制请输入新的QQ号与密码，并点击下方确认按钮进行复制。
+        此举将基于当前BOT除QQ之外的所有内容，来复刻一个属于您的BOT。<br />
+        如确认复制请输入新的QQ号与密码，并点击下方确认按钮进行复制。
       </div>
+      <el-card class="settingCard" shadow="never">
+        <div slot="header" class="settingName">新BOT名称</div>
+        <div class="settingBody">
+          <el-input
+            class="settingInput"
+            placeholder="请输入内容"
+            v-model="newBot.botName"
+          />
+        </div>
+      </el-card>
       <el-card class="settingCard" shadow="never">
         <div slot="header" class="settingName">新BOT对应QQ</div>
         <div class="settingBody">
@@ -424,6 +462,8 @@ export default {
   data() {
     return {
       FT,
+      botId: null,
+      userId: null,
       botOwner: false,
       tabPos: "intro",
       tabNames: ["intro", "advice", "setting"],
@@ -441,6 +481,7 @@ export default {
         botCode: "import os\nprint('hello world')",
       },
       newBot: {
+        botName: "",
         botQQ: "",
         botPassword: "",
       },
@@ -471,7 +512,6 @@ export default {
   },
   async created() {
     let oldUI = JSON.parse(localStorage.getItem("userInfo"));
-    console.log(oldUI);
     if (oldUI) {
       this.$store.state.username = oldUI.username;
       this.$store.state.userId = oldUI.userId;
@@ -479,6 +519,7 @@ export default {
       this.$message("请登录后查看更多内容");
       this.$router.push({ path: "/Login" });
     }
+    this.userId = this.$store.state.userId;
     this.botId = this.$route.params.botId;
     this.tabPos = this.$route.params.botPos;
     await this.getBotInfo();
@@ -486,7 +527,6 @@ export default {
   methods: {
     async getBotInfo() {
       let res = await BotAPI.getBotInfo(this.botId);
-      console.log(res);
       if (res.data.success) {
         this.bot = res.data.data;
         if (this.bot.botOwner.userId == this.$store.state.userId) {
@@ -510,9 +550,29 @@ export default {
         this.showCheck = false;
       }
     },
-    handleCommand(command) {
+    async handleCommand(command) {
       if (command == "check") {
-        this.showCheck = true;
+        this.$confirm(
+          "代码检查将会自动保存当前编辑框中的代码至云端，是否继续？",
+          "注意",
+          {
+            confirmButtonText: "继续",
+            cancelButtonText: "取消",
+            type: "warning",
+          }
+        )
+          .then(async () => {
+            this.codeEdit = false;
+            let res = await BotAPI.uploadCode(this.botId, this.bot.botCode);
+            if (res.data.success) {
+              this.$message.success("代码审查成功，结果见下方");
+              this.showCheck = true;
+              this.checkResult = res.data.data.checkResult;
+            } else {
+              this.$message.error("代码审查失败，请稍后再试");
+            }
+          })
+          .catch(() => {});
       }
       if (command == "download") {
         this.downloadCode();
@@ -521,15 +581,23 @@ export default {
         this.showTemplate = true;
       }
       if (command == "log") {
-        this.showLog = true;
+        this.getNewLog();
       }
+    },
+    getNewLog() {
+      this.showLog = true;
+      this.getBotInfo();
+      // 配置焦点，自动位于最下方
+      this.$nextTick(() => {
+        this.$refs.logCon.focus();
+      });
     },
     downloadCode() {
       this.FT.building();
     },
     getTemplate() {
       this.$confirm(
-        "替换模板后现有的业务代码将被完全重置为模板，请注意代码备份！",
+        "替换模板后会首先暂停BOT，进而代码将被重置为对应类型的模板并保存至云端，请注意代码备份！",
         "注意",
         {
           confirmButtonText: "继续替换",
@@ -537,19 +605,24 @@ export default {
           type: "warning",
         }
       )
-        .then(() => {
+        .then(async () => {
           if (this.templateType == "1") {
+            // 首先暂停BOT
+            await BotAPI.stopBot(this.botId);
+            // 替换代码
             this.bot.botCode = this.codeTemplate[0];
+            await BotAPI.uploadCode(this.botId, this.bot.botCode);
             this.$message.success("业务代码已替换为私聊机器人模板");
+            // 显示替换结果
             this.showTemplate = false;
-            this.codeEdit = true;
             return;
           }
           if (this.templateType == "2") {
+            await BotAPI.stopBot(this.botId);
             this.bot.botCode = this.codeTemplate[1];
+            await BotAPI.uploadCode(this.botId, this.bot.botCode);
             this.$message.success("业务代码已替换为群聊机器人模板");
             this.showTemplate = false;
-            this.codeEdit = true;
             return;
           }
           this.$message.info("更多机器人模板代码更新中");
@@ -625,16 +698,14 @@ export default {
           // 首先停止BOT
           await BotAPI.stopBot(this.botId);
           // 然后更新模板代码
-          this.codeEdit = true;
           this.bot.botCode = this.codeTemplate[this.bot.botType - 1];
           await BotAPI.uploadCode(this.botId, this.bot.botCode);
           // 显示重置成功
           this.$message({
             type: "success",
-            message: "BOT已重置，可以重新运行",
+            message: "BOT已重置",
           });
           // 回到intro页面
-          this.getBotInfo();
           this.tabPos = "intro";
           this.$router.push("intro");
         })
@@ -662,12 +733,29 @@ export default {
         .catch(() => {});
     },
     async forkBot() {
-      if(this.newBot.botQQ == "" || this.newBot.botPassword == ""){
+      if (
+        this.newBot.botQQ == "" ||
+        this.newBot.botPassword == "" ||
+        this.newBot.botName == ""
+      ) {
         this.$message.error("请填写完整信息后再进行赋值操作");
-        return ;
+        return;
       }
-      this.$message.success("新BOT复制成功，可在个人主页进行查看");
-      this.showFork = false;
+      let res = await BotAPI.forkBot(
+        this.botId,
+        this.userId,
+        this.newBot.botName,
+        this.newBot.botQQ,
+        this.newBot.botPassword
+      );
+      // 成功就直接跳转到新的bot详情
+      if (res.data.success) {
+        this.showFork = false;
+        this.$message.success("新BOT复制成功，详情如下");
+        this.$router.push({ path: "/bot/" + res.data.data.botId });
+      } else {
+        this.$message.error(res.data.message);
+      }
     },
   },
 };
@@ -763,7 +851,7 @@ export default {
   margin-top: 2px;
   margin-bottom: 4px;
 }
-.introBody /deep/ .el-textarea__inner {
+.el-textarea /deep/ .el-textarea__inner {
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
     "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
 }
