@@ -87,3 +87,10 @@ export const forkBot = (botId, userId, botName, botQQ, botPassword) => {
     })
   })
 }
+
+export const getBotCode = (botId) =>{
+  return axios({
+    method: 'GET',
+    url: `/bot/download?botId=${botId}`
+  })
+}

@@ -36,7 +36,7 @@
 
     <el-row
       :gutter="20"
-      style="margin-left: 15%; margin-right: 15%"
+      style="margin-left: 15%; margin-right: 15%; padding-bottom: 50px"
       v-if="activeName === '1'"
     >
       <el-col>

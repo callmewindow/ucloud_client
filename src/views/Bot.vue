@@ -468,17 +468,17 @@ export default {
       tabPos: "intro",
       tabNames: ["intro", "advice", "setting"],
       bot: {
-        botName: "小冰",
+        botName: "加载中",
         botStatus: true,
-        botIntro: "QQ的官方对话机器人",
+        botIntro: "机器人信息加载中",
         botType: 1,
-        botQQ: 847590417,
+        botQQ: 0,
         botOwner: {
           userId: 1,
-          userName: "123",
+          userName: "加载中",
         },
-        botLog: "213",
-        botCode: "import os\nprint('hello world')",
+        botLog: "",
+        botCode: "print('加载中')",
       },
       newBot: {
         botName: "",
@@ -525,10 +525,14 @@ export default {
     await this.getBotInfo();
   },
   methods: {
-    async getBotInfo() {
+    async getBotInfo(str) {
       let res = await BotAPI.getBotInfo(this.botId);
       if (res.data.success) {
         this.bot = res.data.data;
+        if (str == "f5") {
+          this.$message.success("日志刷新成功");
+        }
+        console.log(this.bot);
         if (this.bot.botOwner.userId == this.$store.state.userId) {
           this.botOwner = true;
         }
@@ -581,19 +585,26 @@ export default {
         this.showTemplate = true;
       }
       if (command == "log") {
-        this.getNewLog();
+        this.showLog = true;
+        this.$nextTick(() => {
+          this.$refs.logCon.focus();
+        });
       }
     },
     getNewLog() {
-      this.showLog = true;
-      this.getBotInfo();
+      this.getBotInfo("f5");
       // 配置焦点，自动位于最下方
       this.$nextTick(() => {
         this.$refs.logCon.focus();
       });
     },
-    downloadCode() {
-      this.FT.building();
+    async downloadCode() {
+      let res = await BotAPI.getBotCode(this.botId);
+      const address = this.$router.resolve({
+        path: "/api/bot/download?botId="+this.botId,
+      });
+      // 跳过前面的路由符号
+      window.open(address.href.substring(2), '_blank')
     },
     getTemplate() {
       this.$confirm(
@@ -668,6 +679,10 @@ export default {
         .catch(() => {});
     },
     stopBot() {
+      if (this.bot.botStatus == false) {
+        this.$message.info("机器人并未运行，无需关闭");
+        return;
+      }
       this.$confirm("即将停止BOT，有关的服务也将无法使用，是否继续？", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -725,7 +740,7 @@ export default {
           let res = await BotAPI.deleteBot(this.botId);
           if (res.data.success) {
             this.$message.success("BOT已删除");
-            this.$router.push({ path: "/botList" });
+            this.$router.push({ path: "/user/" + this.$store.state.userId });
           } else {
             this.$message.error("BOT删除失败，请稍后再试");
           }
@@ -738,7 +753,7 @@ export default {
         this.newBot.botPassword == "" ||
         this.newBot.botName == ""
       ) {
-        this.$message.error("请填写完整信息后再进行赋值操作");
+        this.$message.error("请填写完整信息后再进行赋复制操作");
         return;
       }
       let res = await BotAPI.forkBot(
@@ -753,6 +768,7 @@ export default {
         this.showFork = false;
         this.$message.success("新BOT复制成功，详情如下");
         this.$router.push({ path: "/bot/" + res.data.data.botId });
+        location.reload();
       } else {
         this.$message.error(res.data.message);
       }
