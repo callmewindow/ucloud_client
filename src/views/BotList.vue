@@ -192,9 +192,13 @@ export default {
           this.$store.state.userId
         );
         //window.console.log(res.data);
-        this.$message.success("创建成功，跳转至详情页");
-        await this.$router.push({ path: "/bot/" + res.data.data.botId });
-      } catch (error) {
+        if(res.data.success){
+          this.$message.success("创建成功，跳转至详情页");
+          await this.$router.push({ path: "/bot/" + res.data.data.botId });
+        }else{
+          this.$message.error("bot重名");
+        }
+              } catch (error) {
         console.log(error);
       }
     },

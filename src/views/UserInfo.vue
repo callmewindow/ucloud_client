@@ -149,10 +149,12 @@ export default {
         const res = await userAPI.getUserInfo(this.$store.state.userId);
         this.username = this.$store.state.username;
         //window.console.log(res.data);
-        this.bot_list = res.data.data;
-        this.bot_total = this.bot_list.length;
-        for (let i = 0; i < this.bot_total; i++)
-          if (this.bot_list[i].botStatus) this.bot_run++;
+        if (res.data.success) {
+          this.bot_list = res.data.data;
+          this.bot_total = this.bot_list.length;
+          for (let i = 0; i < this.bot_total; i++)
+            if (this.bot_list[i].botStatus) this.bot_run++;
+        }
       } catch (e) {
         this.$message.error("请求超时");
       }
