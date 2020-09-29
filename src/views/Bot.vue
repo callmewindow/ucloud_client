@@ -492,8 +492,7 @@ export default {
       showLog: false,
       showFork: false,
       showCheck: false,
-      checkResult:
-        "No config file found, using default configuration\n************* Module TEST.practise.classes_list.try_collection.try_collection\nC: 15, 0: Exactly one space required around assignment\ntest_daque=list()\n          ^ (bad-whitespace)\nC: 25, 0: Exactly one space required around assignment\nt1=time.time()\n  ^ (bad-whitespace)\nC: 26, 0: Exactly one space required after comma\nfor i in range(1,1000000):\n                ^ (bad-whitespace)\nC: 28, 0: Exactly one space required around assignment\nt=time.time()-t1\n ^ (bad-whitespace)\nC: 31, 0: Trailing newlines (trailing-newlines)\nC:  1, 0: Missing module docstring (missing-docstring)\nC:  6, 0: Invalid constant name 'a' (invalid-name)\nC:  7, 0: Invalid constant name 'list_a' (invalid-name)",
+      checkResult: "检查结果加载中",
       disStart: false,
       disName: true,
       disQQ: true,
