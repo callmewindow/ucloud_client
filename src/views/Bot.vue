@@ -399,7 +399,7 @@
             :autosize="{ minRows: 10, maxRows: 25 }"
             resize="both"
             placeholder="暂无运行日志内容"
-            v-model="bot.botLog"
+            v-model="trueLog"
           ></el-input>
         </el-col>
       </el-row>
@@ -467,6 +467,7 @@ export default {
       botOwner: false,
       tabPos: "intro",
       tabNames: ["intro", "advice", "setting"],
+      trueLog: "暂无日志内容",
       bot: {
         botName: "加载中",
         botStatus: true,
@@ -528,6 +529,10 @@ export default {
       let res = await BotAPI.getBotInfo(this.botId);
       if (res.data.success) {
         this.bot = res.data.data;
+        this.trueLog = "";
+        for (let i = 0; i < 100 && i < this.bot.botLog.length; i++) {
+          this.trueLog += this.bot.botLog[i] + "\n";
+        }
         if (str == "f5") {
           this.$message.success("日志刷新成功");
         }
@@ -600,10 +605,10 @@ export default {
     async downloadCode() {
       let res = await BotAPI.getBotCode(this.botId);
       const address = this.$router.resolve({
-        path: "/api/bot/download?botId="+this.botId,
+        path: "/api/bot/download?botId=" + this.botId,
       });
       // 跳过前面的路由符号
-      window.open(address.href.substring(2), '_blank')
+      window.open(address.href.substring(2), "_blank");
     },
     getTemplate() {
       this.$confirm(

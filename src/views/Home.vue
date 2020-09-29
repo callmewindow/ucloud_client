@@ -268,7 +268,7 @@ export default {
         this.bot_list = [];
         this.bot_list_all = res.data.data;
         this.bot_list_all.reverse();
-        for (let i = 0; i < 4 && i < this.bot_list_all.length; i++) {
+        for (let i = 0; i < 8 && i < this.bot_list_all.length; i++) {
           this.bot_list.push(this.bot_list_all[i]);
         }
       }
@@ -358,6 +358,7 @@ export default {
   height: auto;
 }
 .botCard {
+  height: 80px;
   width: 80%;
   margin-left: 10%;
   padding-bottom: 10px;
