@@ -11,9 +11,9 @@
 
             <el-col :span="20">
               <el-card id="up_right_part">
-                <div id="course_name" v-if="bot.botType == 1">私聊机器人</div>
-                <div id="course_name" v-if="bot.botType == 2">群聊机器人</div>
-                <div id="course_name" v-if="bot.botType == 3">
+                <div class="course_name" v-if="bot.botType == 1">私聊机器人</div>
+                <div class="course_name" v-if="bot.botType == 2">群聊机器人</div>
+                <div class="course_name" v-if="bot.botType == 3">
                   代码检查机器人
                 </div>
               </el-card>
@@ -928,7 +928,7 @@ app.launch_blocking()
   justify-content: flex-start;
   align-items: center;
 }
-#course_name {
+.course_name {
   font-size: 15px;
   padding-right: 15px;
   color: #409eff;
