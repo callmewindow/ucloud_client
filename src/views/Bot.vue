@@ -487,7 +487,123 @@ export default {
       },
       codeEdit: false,
       showTemplate: false,
-      codeTemplate: ["si liao ji qi ren", "qun liao ji qi ren"],
+      codeTemplate: [`import asyncio
+from graia.broadcast import Broadcast
+from graia.application import GraiaMiraiApplication, Session, Group, Member, MessageChain, Friend
+from graia.application.message.elements.internal import Plain
+
+loop = asyncio.get_event_loop()
+bcc = Broadcast(loop=loop)
+app = GraiaMiraiApplication(
+    broadcast=bcc,
+    connect_info=Session(
+        host='http://localhost:8080',
+        authKey='3285415231',
+        account=此处填入QQ号,
+        websocket=True,
+
+    )
+)
+
+
+@bcc.receiver('FriendMessage')
+async def friend_message_listener(app: GraiaMiraiApplication, message: MessageChain, friend: Friend):
+
+    content = message.asDisplay()
+    if content == '你好':
+        await app.sendFriendMessage(
+            target=friend,
+            message=MessageChain.create([Plain(text='你好，我是私聊bot')])
+        )
+        return
+    await app.sendFriendMessage(
+        target=friend,
+        message=MessageChain.create([Plain(text='你在说啥？')])
+    )
+    return
+
+
+app.launch_blocking()
+`, `import asyncio
+
+from graia.broadcast import Broadcast
+from graia.application import GraiaMiraiApplication, Session, Group, Member, MessageChain
+from graia.application.message.elements.internal import Plain
+
+loop = asyncio.get_event_loop()
+bcc = Broadcast(loop=loop)
+app = GraiaMiraiApplication(
+    broadcast=bcc,
+    connect_info=Session(
+        host='http://localhost:8080',
+        authKey='3285415231',
+        account=此处填入QQ号,
+        websocket=True,
+
+    )
+)
+
+
+@bcc.receiver('GroupMessage')
+async def group_message_listener(app: GraiaMiraiApplication, message: MessageChain, group: Group, member: Member):
+
+    content = message.asDisplay()
+    if content == '你好':
+        await app.sendGroupMessage(
+            group=group,
+            message=MessageChain.create([Plain(text='你好，我是群聊bot')])
+        )
+        return
+    await app.sendGroupMessage(
+        group=group,
+        message=MessageChain.create([Plain(text='你在说啥？')])
+    )
+    return
+
+
+app.launch_blocking()
+`, `import asyncio, re, os
+
+from graia.broadcast import Broadcast
+from graia.application import GraiaMiraiApplication, Session, Group, Member, MessageChain
+from graia.application.message.elements.internal import Plain
+
+loop = asyncio.get_event_loop()
+bcc = Broadcast(loop=loop)
+app = GraiaMiraiApplication(
+    broadcast=bcc,
+    connect_info=Session(
+        host='http://localhost:8080',
+        authKey='3285415231',
+        account=此处填入QQ号,
+        websocket=True
+    )
+)
+
+
+@bcc.receiver('GroupMessage')
+async def group_message_listener(app: GraiaMiraiApplication, message: MessageChain, group: Group, member: Member):
+    # 小程序解析
+
+    if group.id != bot_test:
+        return
+    content = message.asDisplay()
+    with open('/home/mirai/bot/code.py', 'w') as f:
+        f.write(content)
+    os.system(r'pylint code.py > /home/mirai/bot/pylint.out')
+
+    out = ''
+    with open('/home/mirai/bot/pylint.out', 'r') as f:
+        out = f.read()
+    await app.sendGroupMessage(
+        group=group,
+        message=MessageChain.create([Plain(text=out)])
+    )
+    return
+
+
+app.launch_blocking()
+`],
       templateType: "1",
       showLog: false,
       showFork: false,
@@ -635,7 +751,14 @@ export default {
             this.showTemplate = false;
             return;
           }
-          this.$message.info("更多机器人模板代码更新中");
+          if (this.templateType == "3") {
+            await BotAPI.stopBot(this.botId);
+            this.bot.botCode = this.codeTemplate[2];
+            await BotAPI.uploadCode(this.botId, this.bot.botCode);
+            this.$message.success("业务代码已替换为代码检查机器人模板");
+            this.showTemplate = false;
+            return;
+          }
         })
         .catch(() => {});
     },
