@@ -5,8 +5,8 @@ import router from './../router'
 import store from '../store'
 
 // text
-export const siteTitle = 'beacon'
-export const siteTitleInFull = 'beacon education'
+export const siteTitle = 'ucloud'
+export const siteTitleInFull = 'ucloud BOT management'
 
 // methods
 
