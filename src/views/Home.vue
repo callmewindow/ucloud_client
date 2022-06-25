@@ -194,38 +194,29 @@ export default {
       centerLogo: require("@/assets/ucloud-horizon-complex.png"),
       simpleLogo: require("@/assets/ucloud-horizon-simple.png"),
       username: "加载中",
-      bot_list_all: [],
       bot_list: [
         {
           botId: 1,
-          botName: "botname",
+          botName: "孤寡青蛙",
           botType: 1,
           botOwner: {
-            userName: "aaaaaaaaaa",
+            userName: "大云内测用户",
           },
         },
         {
-          botId: 1,
-          botName: "botname",
+          botId: 2,
+          botName: "提醒喝水小助手",
           botType: 2,
           botOwner: {
-            userName: "aaaaaaaaaa",
+            userName: "大云内测用户",
           },
         },
         {
-          botId: 1,
-          botName: "botname",
+          botId: 3,
+          botName: "Steam游戏资讯",
           botType: 1,
           botOwner: {
-            userName: "aaaaaaaaaa",
-          },
-        },
-        {
-          botId: 1,
-          botName: "botname",
-          botType: 1,
-          botOwner: {
-            userName: "aaaaaaaaaa",
+            userName: "大云内测用户",
           },
         },
       ],
@@ -235,7 +226,8 @@ export default {
   },
   async created() {
     // 填充旧数据
-    let oldUI = JSON.parse(localStorage.getItem("userInfo"));
+    // let oldUI = JSON.parse(localStorage.getItem("userInfo"));
+    let oldUI = this.$store.state;
     if (oldUI) {
       this.$store.state.username = oldUI.username;
       this.$store.state.userId = oldUI.userId;
@@ -249,6 +241,10 @@ export default {
       FT.toPath("/bot/" + botId);
     },
     async getMyBot() {
+      this.haveBot = true;
+      this.my_bot_list_all = this.bot_list;
+      this.my_bot_list = this.my_bot_list_all;
+      return;
       let res = await UserAPI.getUserInfo(this.$store.state.userId);
       console.log(res);
       if (res.data.success) {
@@ -263,6 +259,8 @@ export default {
       }
     },
     async getNewBot(type) {
+      this.$message.success("最新BOT已刷新");
+      return;
       let res = await BotAPI.getAllBot();
       if (res.data.success) {
         this.bot_list = [];

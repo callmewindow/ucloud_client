@@ -98,9 +98,9 @@
             ></el-option>
           </el-select>
         </div>
-        <el-button id="sendBtn" type="primary" size="small" @click="create_bot"
-          >创建</el-button
-        >
+        <el-button id="sendBtn" type="primary" size="small" @click="create_bot">
+          创建
+        </el-button>
       </div>
     </el-dialog>
   </div>
@@ -127,6 +127,9 @@ export default {
         botIntro: "",
         botQQ: "",
         botPassword: "",
+        botOwner: {
+          userName: "大云内测用户",
+        },
       },
       options: [
         {
@@ -141,7 +144,9 @@ export default {
     };
   },
   created() {
-    let oldUI = JSON.parse(localStorage.getItem("userInfo"));
+    // 填充旧数据
+    // let oldUI = JSON.parse(localStorage.getItem("userInfo"));
+    let oldUI = this.$store.state;
     if (oldUI) {
       this.$store.state.username = oldUI.username;
       this.$store.state.userId = oldUI.userId;
@@ -160,6 +165,33 @@ export default {
   },
   methods: {
     async get_all_bot() {
+      this.bot_list = [
+        {
+          botId: 1,
+          botName: "孤寡青蛙",
+          botType: 1,
+          botOwner: {
+            userName: "大云内测用户",
+          },
+        },
+        {
+          botId: 2,
+          botName: "提醒喝水小助手",
+          botType: 2,
+          botOwner: {
+            userName: "大云内测用户",
+          },
+        },
+        {
+          botId: 3,
+          botName: "Steam游戏资讯",
+          botType: 1,
+          botOwner: {
+            userName: "大云内测用户",
+          },
+        },
+      ];
+      return;
       try {
         const list = await botAPI.getAllBot();
         //window.console.log(list.data.data);
@@ -182,6 +214,9 @@ export default {
         this.$message.error("必填字段未填写");
         return;
       }
+      this.bot_list.push(this.new_bot);
+      this.showAddBot = false
+      return;
       try {
         const res = await botAPI.createBot(
           this.new_bot.botName,
@@ -192,13 +227,13 @@ export default {
           this.$store.state.userId
         );
         //window.console.log(res.data);
-        if(res.data.success){
+        if (res.data.success) {
           this.$message.success("创建成功，跳转至详情页");
           await this.$router.push({ path: "/bot/" + res.data.data.botId });
-        }else{
+        } else {
           this.$message.error("bot重名");
         }
-              } catch (error) {
+      } catch (error) {
         console.log(error);
       }
     },

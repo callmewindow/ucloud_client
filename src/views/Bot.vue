@@ -488,7 +488,8 @@ export default {
       },
       codeEdit: false,
       showTemplate: false,
-      codeTemplate: [`import asyncio
+      codeTemplate: [
+        `import asyncio
 from graia.broadcast import Broadcast
 from graia.application import GraiaMiraiApplication, Session, Group, Member, MessageChain, Friend
 from graia.application.message.elements.internal import Plain
@@ -525,7 +526,8 @@ async def friend_message_listener(app: GraiaMiraiApplication, message: MessageCh
 
 
 app.launch_blocking()
-`, `import asyncio
+`,
+        `import asyncio
 
 from graia.broadcast import Broadcast
 from graia.application import GraiaMiraiApplication, Session, Group, Member, MessageChain
@@ -563,7 +565,8 @@ async def group_message_listener(app: GraiaMiraiApplication, message: MessageCha
 
 
 app.launch_blocking()
-`, `import asyncio, re, os
+`,
+        `import asyncio, re, os
 
 from graia.broadcast import Broadcast
 from graia.application import GraiaMiraiApplication, Session, Group, Member, MessageChain
@@ -604,7 +607,8 @@ async def group_message_listener(app: GraiaMiraiApplication, message: MessageCha
 
 
 app.launch_blocking()
-`],
+`,
+      ],
       templateType: "1",
       showLog: false,
       showFork: false,
@@ -627,7 +631,9 @@ app.launch_blocking()
     };
   },
   async created() {
-    let oldUI = JSON.parse(localStorage.getItem("userInfo"));
+    // 填充旧数据
+    // let oldUI = JSON.parse(localStorage.getItem("userInfo"));
+    let oldUI = this.$store.state;
     if (oldUI) {
       this.$store.state.username = oldUI.username;
       this.$store.state.userId = oldUI.userId;
@@ -642,6 +648,29 @@ app.launch_blocking()
   },
   methods: {
     async getBotInfo(str) {
+      this.bot = {
+        botName: "孤寡青蛙",
+        botStatus: false,
+        botIntro: "不断和用户私聊发送‘孤寡’，以此来达到扰乱心智的效果",
+        botType: 1,
+        botQQ: 847590417,
+        botOwner: {
+          userId: 1,
+          userName: "大云内测用户",
+        },
+        botLog: "",
+        botCode: `
+        #include <stdio.h>
+        int main(){
+            while(1){ 
+                print('孤寡');
+            }
+            return 0;
+        }`,
+      };
+      this.trueLog = "my man, awesome, sixsixsix!";
+      this.botOwner = true;
+      return;
       let res = await BotAPI.getBotInfo(this.botId);
       if (res.data.success) {
         this.bot = res.data.data;
@@ -687,6 +716,9 @@ app.launch_blocking()
         )
           .then(async () => {
             this.codeEdit = false;
+            this.showCheck = true;
+            this.checkResult = "no problem";
+            return;
             let res = await BotAPI.uploadCode(this.botId, this.bot.botCode);
             if (res.data.success) {
               this.$message.success("代码审查成功，结果见下方");

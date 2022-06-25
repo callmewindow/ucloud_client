@@ -28,9 +28,7 @@
     <el-row style="margin-left: 16%; margin-right: 16%; margin-top: 10px">
       <el-tabs v-model="activeName">
         <el-tab-pane label="我的BOT" name="1"></el-tab-pane>
-        <el-tab-pane label="收藏的BOT" name="2">
-          功能开发中...
-        </el-tab-pane>
+        <el-tab-pane label="收藏的BOT" name="2"> 功能开发中... </el-tab-pane>
       </el-tabs>
     </el-row>
 
@@ -122,7 +120,8 @@ export default {
   },
   created() {
     // 填充旧数据
-    let oldUI = JSON.parse(localStorage.getItem("userInfo"));
+    // let oldUI = JSON.parse(localStorage.getItem("userInfo"));
+    let oldUI = this.$store.state;
     if (oldUI) {
       this.$store.state.username = oldUI.username;
       this.$store.state.userId = oldUI.userId;
@@ -144,6 +143,37 @@ export default {
   },
   methods: {
     async get_user_info() {
+      this.username = "大云内测用户"
+      this.bot_list = [
+        {
+          botId: 1,
+          botName: "孤寡青蛙",
+          botType: 1,
+          botOwner: {
+            userName: "大云内测用户",
+          },
+        },
+        {
+          botId: 2,
+          botName: "提醒喝水小助手",
+          botType: 2,
+          botOwner: {
+            userName: "大云内测用户",
+          },
+        },
+        {
+          botId: 3,
+          botName: "Steam游戏资讯",
+          botType: 1,
+          botOwner: {
+            userName: "大云内测用户",
+          },
+        },
+      ];
+      this.bot_total = this.bot_list.length;
+      for (let i = 0; i < this.bot_total; i++)
+        if (this.bot_list[i].botStatus) this.bot_run++;
+      return
       try {
         //const res = await userAPI.getUserInfo(1)
         const res = await userAPI.getUserInfo(this.$store.state.userId);
